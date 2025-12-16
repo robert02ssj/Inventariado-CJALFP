@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS Inventario;
 CREATE DATABASE Inventario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE Inventario;
 
--- 1. TIPOS (Discriminador)
+-- 1. TIPOS
 CREATE TABLE Tipo (
     id_tipo INT PRIMARY KEY, 
     nombre VARCHAR(50) NOT NULL
@@ -13,9 +13,9 @@ INSERT INTO Tipo VALUES
 (3, 'Pantalla'), 
 (4, 'Raton'), 
 (5, 'Teclado'),
-(6, 'Docking Station'); -- <--- NUEVO TIPO
+(6, 'Docking Station');
 
--- 2. DICCIONARIOS / TABLAS INDEPENDIENTES
+-- 2. DICCIONARIOS
 CREATE TABLE Marca (
     id_marca INT PRIMARY KEY AUTO_INCREMENT,
     nombre_fabricante VARCHAR(100) NOT NULL
@@ -38,13 +38,13 @@ CREATE TABLE Linea (
     tiene_datos BOOLEAN DEFAULT FALSE
 );
 
--- 3. TABLA PADRE: EQUIPOS
+-- 3. PADRE: EQUIPOS
 CREATE TABLE Equipos (
     id_equipo INT PRIMARY KEY AUTO_INCREMENT,
     id_tipo INT NOT NULL,
     id_modelo INT NOT NULL,
     id_estado INT NOT NULL,
-    numero_serie VARCHAR(100) UNIQUE, -- S/N heredado también por la Docking
+    numero_serie VARCHAR(100) UNIQUE,
     observaciones TEXT,
     
     FOREIGN KEY (id_tipo) REFERENCES Tipo(id_tipo),
@@ -52,13 +52,15 @@ CREATE TABLE Equipos (
     FOREIGN KEY (id_estado) REFERENCES Estado(id_estado)
 );
 
--- 4. HIJOS (Herencia)
+-- 4. HIJOS
 
--- ORDENADORES
+-- ORDENADORES (Ahora con movilidad)
 CREATE TABLE Ordenadores (
     id_equipo INT PRIMARY KEY,
     codigo_crija VARCHAR(50) UNIQUE,
-    id_linea INT, 
+    id_linea INT,
+    movilidad BOOLEAN DEFAULT FALSE, -- <--- NUEVO CAMPO (True=Portátil, False=Torre)
+    
     FOREIGN KEY (id_equipo) REFERENCES Equipos(id_equipo) ON DELETE CASCADE,
     FOREIGN KEY (id_linea) REFERENCES Linea(id_linea)
 );
@@ -79,20 +81,22 @@ CREATE TABLE Pantallas (
     FOREIGN KEY (id_equipo) REFERENCES Equipos(id_equipo) ON DELETE CASCADE
 );
 
--- RATONES, TECLADOS (Simples)
+-- RATONES
 CREATE TABLE Ratones (
     id_equipo INT PRIMARY KEY,
     FOREIGN KEY (id_equipo) REFERENCES Equipos(id_equipo) ON DELETE CASCADE
 );
+
+-- TECLADOS
 CREATE TABLE Teclados (
     id_equipo INT PRIMARY KEY,
     FOREIGN KEY (id_equipo) REFERENCES Equipos(id_equipo) ON DELETE CASCADE
 );
 
--- DOCKING STATIONS (NUEVO HIJO)
+-- DOCKING STATIONS
 CREATE TABLE DockingStations (
     id_equipo INT PRIMARY KEY,
-    mac_address VARCHAR(50) UNIQUE, -- El dato específico
+    mac_address VARCHAR(50) UNIQUE,
     FOREIGN KEY (id_equipo) REFERENCES Equipos(id_equipo) ON DELETE CASCADE
 );
 
