@@ -3,55 +3,50 @@ package com.cjalfp.inventario.controller;
 import com.cjalfp.inventario.model.Inventario;
 import com.cjalfp.inventario.repository.InventarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/inventarios")
+@Controller
+@RequestMapping("/inventario")
 @RequiredArgsConstructor
 public class InventarioController {
 
     private final InventarioRepository inventarioRepository;
 
     @GetMapping
-    public List<Inventario> getAll() {
-        return inventarioRepository.findAll();
-    }
+    public String listarInventario(
+            @RequestParam(required = false) String busqueda,
+            Model model) {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Inventario> getById(@PathVariable Integer id) {
-        return inventarioRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+        // 1. Obtener todo el histórico
+        List<Inventario> lista = inventarioRepository.findAll();
 
-    @PostMapping
-    public Inventario create(@RequestBody Inventario inventario) {
-        // La fecha de asignación se pone automática en el @PrePersist de la entidad si viene nula
-        return inventarioRepository.save(inventario);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Inventario> update(@PathVariable Integer id, @RequestBody Inventario inventarioDetails) {
-        return inventarioRepository.findById(id)
-                .map(inventario -> {
-                    inventario.setUsuario(inventarioDetails.getUsuario());
-                    inventario.setEquipo(inventarioDetails.getEquipo());
-                    inventario.setFechaDevolucion(inventarioDetails.getFechaDevolucion());
-                    // No solemos actualizar fechaAsignacion, pero podrías añadirlo si quieres
-                    return ResponseEntity.ok(inventarioRepository.save(inventario));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (inventarioRepository.existsById(id)) {
-            inventarioRepository.deleteById(id);
-            return ResponseEntity.ok().build();
+        // 2. Filtro del Buscador (si el usuario escribió algo)
+        if (busqueda != null && !busqueda.isEmpty()) {
+            String term = busqueda.toLowerCase();
+            lista = lista.stream()
+                .filter(inv ->
+                    // Busca por Nombre o Apellidos del Usuario
+                    (inv.getUsuario().getNombre() + " " + inv.getUsuario().getApellidos()).toLowerCase().contains(term) ||
+                    // Busca por LDAP
+                    (inv.getUsuario().getLdap() != null && inv.getUsuario().getLdap().toLowerCase().contains(term)) ||
+                    // Busca por Nº Serie del Equipo
+                    (inv.getEquipo().getNumeroSerie() != null && inv.getEquipo().getNumeroSerie().toLowerCase().contains(term)) ||
+                    // Busca por Modelo del Equipo
+                    (inv.getEquipo().getModelo().getNombre().toLowerCase().contains(term))
+                )
+                .collect(Collectors.toList());
         }
-        return ResponseEntity.notFound().build();
+
+        model.addAttribute("inventarios", lista);
+        model.addAttribute("busquedaActual", busqueda);
+
+        return "inventario/lista"; // Renderiza templates/inventario/lista.html
     }
 }

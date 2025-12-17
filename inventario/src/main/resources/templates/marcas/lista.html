@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+
+    <section>
+        <div class="header-actions">
+            <h2 style="color: #333; margin: 0;">Catálogo de Marcas</h2>
+            <a th:href="@{/marcas/nueva}" class="btn-create">+ Nueva Marca</a>
+        </div>
+
+        <form action="/marcas" method="get" class="search-container">
+            <input type="text" name="busqueda" class="search-input" 
+                   placeholder="Buscar fabricante (ej: Samsung, HP...)"
+                   th:value="${busquedaActual}">
+        </form>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">ID</th>
+                        <th>Nombre del Fabricante</th>
+                        <th style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="marca : ${marcas}">
+                        <td th:text="${marca.id}">1</td>
+                        <td th:text="${marca.nombreFabricante}" style="font-weight: 500;">Samsung</td>
+                        <td>
+                            <a th:href="@{/marcas/editar/{id}(id=${marca.id})}" class="btn-action">Editar</a>
+                            
+                            <a th:href="@{/marcas/borrar/{id}(id=${marca.id})}" 
+                               class="btn-action btn-danger"
+                               onclick="return confirm('¿Estás seguro? Si borras la marca, puede dar error si tiene modelos asociados.');">Borrar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(marcas)}">
+                        <td colspan="3" style="text-align:center; padding: 20px; color: #666;">
+                            No se encontraron marcas.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

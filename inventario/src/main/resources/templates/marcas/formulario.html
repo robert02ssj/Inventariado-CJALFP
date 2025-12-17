@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="text-align: center; margin-bottom: 20px;" th:text="${titulo}">Formulario</h2>
+
+        <div class="form-container">
+            <form th:action="@{/marcas/guardar}" th:object="${marca}" method="post">
+                
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label class="form-label">Nombre del Fabricante:</label>
+                    <input type="text" th:field="*{nombreFabricante}" class="form-control" placeholder="Ej: Samsung" required />
+                </div>
+
+                <div class="form-actions">
+                    <a href="/marcas" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-create">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

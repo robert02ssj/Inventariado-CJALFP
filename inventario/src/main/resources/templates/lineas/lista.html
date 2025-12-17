@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+
+    <section>
+        <div class="header-actions">
+            <h2 style="color: #333; margin: 0;">Gestión de Líneas Móviles</h2>
+            <a th:href="@{/lineas/nueva}" class="btn-create">+ Nueva Línea</a>
+        </div>
+
+        <form action="/lineas" method="get" class="search-container">
+            <input type="text" name="busqueda" class="search-input" 
+                   placeholder="Buscar por nº corto o largo..."
+                   th:value="${busquedaActual}">
+        </form>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">ID</th>
+                        <th>Nº Corto (Extensión)</th>
+                        <th>Nº Largo (Público)</th>
+                        <th>PUK</th>
+                        <th>¿Tiene Datos?</th>
+                        <th style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="linea : ${lineas}">
+                        <td th:text="${linea.id}">1</td>
+                        <td th:text="${linea.numeroCorto}" style="font-weight: bold;">1234</td>
+                        <td th:text="${linea.numeroLargo}">600123456</td>
+                        <td th:text="${linea.puk}">999999</td>
+                        
+                        <td>
+                            <span th:if="${linea.tieneDatos == true}" 
+                                  style="color: #007a33; font-weight: bold; background-color: #d1e7dd; padding: 2px 6px; border-radius: 4px;">
+                                SÍ
+                            </span>
+                            <span th:if="${linea.tieneDatos == false or linea.tieneDatos == null}" 
+                                  style="color: #666; background-color: #e9ecef; padding: 2px 6px; border-radius: 4px;">
+                                NO
+                            </span>
+                        </td>
+                        
+                        <td>
+                            <a th:href="@{/lineas/editar/{id}(id=${linea.id})}" class="btn-action">Editar</a>
+                            <a th:href="@{/lineas/borrar/{id}(id=${linea.id})}" 
+                               class="btn-action btn-danger"
+                               onclick="return confirm('¿Seguro que quieres borrar esta línea?');">Borrar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(lineas)}">
+                        <td colspan="6" style="text-align:center; padding: 20px; color: #666;">
+                            No hay líneas registradas.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

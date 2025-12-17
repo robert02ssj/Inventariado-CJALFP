@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+
+    <section>
+        <div class="header-actions">
+            <h2 style="color: #333; margin: 0;">Catálogo de Modelos</h2>
+            <a href="#" class="btn-create">+ Nuevo Modelo</a>
+        </div>
+
+        <form action="/modelos" method="get" class="search-container">
+            <input type="text" 
+                   name="busqueda" 
+                   class="search-input" 
+                   placeholder="Buscar modelo o marca..."
+                   th:value="${busquedaActual}">
+        </form>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">ID</th>
+                        <th>Nombre del Modelo</th>
+                        <th>Marca (Fabricante)</th> <th style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="modelo : ${modelos}">
+                        <td th:text="${modelo.id}">1</td>
+                        
+                        <td th:text="${modelo.nombre}" style="font-weight: 500;">Galaxy S23</td>
+                        
+                        <td th:text="${modelo.marca.nombreFabricante}">Samsung</td>
+                        
+                        <td>
+                            <a href="#" class="btn-action">Editar</a>
+                            <a href="#" class="btn-action btn-danger">Borrar</a>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(modelos)}">
+                        <td colspan="4" style="text-align:center; padding: 20px; color: #666;">
+                            No se encontraron modelos registrados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

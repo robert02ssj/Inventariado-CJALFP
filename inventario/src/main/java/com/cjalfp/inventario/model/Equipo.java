@@ -6,27 +6,31 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "Equipos")
-public class Equipo {
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "id_tipo", discriminatorType = DiscriminatorType.INTEGER)
+public abstract class Equipo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_equipo")
     private Integer id;
 
-    @Column(name = "sn_emei", unique = true, length = 100)
-    private String snEmei;
-
-    @Column(name = "linea_crija", length = 100)
-    private String lineaCrija;
+    // Relación solo lectura para ver el tipo
+    @ManyToOne
+    @JoinColumn(name = "id_tipo", insertable = false, updatable = false)
+    private Tipo tipoObjeto;
 
     @ManyToOne
     @JoinColumn(name = "id_modelo", nullable = false)
     private Modelo modelo;
 
     @ManyToOne
-    @JoinColumn(name = "id_tipo", nullable = false)
-    private Tipo tipo;
-
-    @ManyToOne
     @JoinColumn(name = "id_estado", nullable = false)
     private Estado estado;
+
+    @Column(name = "numero_serie", unique = true, length = 100)
+    private String numeroSerie;
+
+    @Column(columnDefinition = "TEXT")
+    private String observaciones;
 }

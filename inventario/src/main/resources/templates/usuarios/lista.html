@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+
+    <section>
+        <div class="header-actions">
+            <h2 style="color: #333; margin: 0;">Directorio de Usuarios</h2>
+<a href="/usuarios/nuevo" class="btn-create">+ Nuevo Usuario</a>        </div>
+
+        <form action="/usuarios" method="get" class="search-container">
+            <input type="text" 
+                   name="busqueda" 
+                   class="search-input" 
+                   placeholder="Buscar por nombre, apellidos o LDAP..."
+                   th:value="${busquedaActual}">
+        </form>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">ID</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Usuario LDAP (Dominio)</th>
+                        <th style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td th:text="${usuario.id}">1</td>
+                        
+                        <td th:text="${usuario.nombre}" style="font-weight: 500;">Juan</td>
+                        
+                        <td th:text="${usuario.apellidos}">García Pérez</td>
+                        
+                        <td>
+                            <span th:if="${usuario.ldap != null}" 
+                                  th:text="${usuario.ldap}"
+                                  style="background-color: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #555;">
+                                jgarcia
+                            </span>
+                            <span th:if="${usuario.ldap == null}">-</span>
+                        </td>
+                        
+                        <td>
+                            <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn-action">Editar</a>
+                            <a th:href="@{/usuarios/borrar/{id}(id=${usuario.id})}" class="btn-action btn-danger"onclick="return confirm('¿Estás seguro de borrar este usuario?');">Borrar</a>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(usuarios)}">
+                        <td colspan="5" style="text-align:center; padding: 20px; color: #666;">
+                            No hay usuarios registrados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

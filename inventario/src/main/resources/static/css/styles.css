@@ -1,0 +1,317 @@
+/* --- RESET BÁSICO --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Para que el footer baje al final */
+}
+
+/* --- HEADER (Junta Style) --- */
+header {
+    background-color: #007a33; /* Verde Junta */
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* --- AÑADIR ESTO EN LA SECCIÓN DEL HEADER --- */
+.header-link {
+    text-decoration: none;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.header-link:hover {
+    opacity: 0.9; /* Efecto sutil al pasar el ratón */
+}
+
+/* --- ACTUALIZAR LA SECCIÓN DE LA TABLA CON ESTO --- */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    /* table-layout: auto;  <-- Esto es el defecto, permite que se adapten */
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    
+    /* LA CLAVE: Evita que el texto se parta en varias líneas */
+    white-space: nowrap; 
+}
+
+/* Opcional: Si alguna columna (como Modelo) puede ser muy larga y prefieres que corte */
+/* .col-modelo { white-space: normal; } */
+
+.data-table th {
+    background-color: #007a33;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1; /* Empuja el footer hacia abajo */
+    width: 100%;
+}
+
+/* --- DASHBOARD GRID (Tu boceto) --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* --- TARJETAS DE SECCIÓN --- */
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border-top: 4px solid #007a33; /* Detalle verde arriba */
+}
+
+.card-header {
+    background-color: #e9ecef;
+    padding: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #333;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* --- BOTONES DEL MENÚ --- */
+.menu-btn {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: #333;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.menu-btn:hover {
+    background-color: #007a33;
+    color: white;
+    border-color: #007a33;
+    transform: translateY(-2px);
+}
+
+/* --- FOOTER --- */
+footer {
+    background-color: #e9ecef; /* Gris clarito */
+    color: #555;
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid #ddd;
+    margin-top: auto;
+    font-size: 0.9rem;
+}
+
+footer strong {
+    display: block;
+    color: #007a33;
+    margin-bottom: 5px;
+}
+
+/* --- BARRA DE PESTAÑAS (TABS) --- */
+.tabs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #007a33; /* Línea base verde */
+    padding-bottom: 0;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background-color: #e9ecef;
+    color: #333;
+    text-decoration: none;
+    border-radius: 8px 8px 0 0; /* Bordes redondos solo arriba */
+    border: 1px solid #ddd;
+    border-bottom: none;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.tab-btn:hover {
+    background-color: #d1e7dd;
+    color: #004d20;
+}
+
+.tab-btn.active {
+    background-color: #007a33;
+    color: white;
+    border-color: #007a33;
+}
+
+/* --- BUSCADOR CENTRADO --- */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 15px;
+    border: 2px solid #007a33;
+    border-radius: 20px; /* Redondeado tipo píldora */
+    font-size: 1rem;
+    outline: none;
+}
+
+/* --- TABLA DE DATOS --- */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.data-table th {
+    background-color: #007a33;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f8f9fa; /* Efecto cebra */
+}
+
+.data-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-action {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    color: white;
+    background-color: #0d6efd;
+    text-decoration: none;
+    border-radius: 4px;
+}
+/* --- BOTÓN CREAR (Para tablas auxiliares) --- */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-create {
+    background-color: #007a33; /* Verde Junta */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 1px solid #005f28;
+    transition: background 0.3s;
+}
+
+.btn-create:hover {
+    background-color: #005f28;
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Rojo para borrar */
+    color: white;
+    margin-left: 5px;
+}
+/* --- FORMULARIOS --- */
+.form-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 0 auto; /* Centrado */
+    border-top: 4px solid #007a33;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: #007a33;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 51, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Botones a la derecha */
+    gap: 10px;
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}

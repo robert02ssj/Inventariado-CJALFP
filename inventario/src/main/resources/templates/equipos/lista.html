@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+
+    <section>
+        <h2 style="margin-bottom: 20px; color: #333;">Gestión Inventario TIC</h2>
+
+        <div class="tabs-container">
+            <a href="/equipos" class="tab-btn" th:classappend="${tipoActivo == null} ? 'active'">Todos</a>
+            <a href="/equipos?tipo=1" class="tab-btn" th:classappend="${tipoActivo == 1} ? 'active'">Ordenadores</a>
+            <a href="/equipos?tipo=2" class="tab-btn" th:classappend="${tipoActivo == 2} ? 'active'">Teléfonos</a>
+            <a href="/equipos?tipo=6" class="tab-btn" th:classappend="${tipoActivo == 6} ? 'active'">Docking Station</a>
+            <a href="/equipos?tipo=3" class="tab-btn" th:classappend="${tipoActivo == 3} ? 'active'">Pantallas</a>
+            <a href="/equipos?tipo=4" class="tab-btn" th:classappend="${tipoActivo == 4} ? 'active'">Ratones</a>
+            <a href="/equipos?tipo=5" class="tab-btn" th:classappend="${tipoActivo == 5} ? 'active'">Teclados</a>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar por serie, modelo, usuario...">
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th th:if="${tipoActivo == null}">Tipo</th> <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Nº Serie / IMEI</th>
+
+                        <th th:if="${tipoActivo == 1 or tipoActivo == 3}">CRIJA</th>
+
+                        <th th:if="${tipoActivo == 1 or tipoActivo == 2}">Nº Línea</th>
+
+                        <th th:if="${tipoActivo == 1 or tipoActivo == 2}">Movilidad</th>
+
+                        <th th:if="${tipoActivo == 6}">MAC Address</th>
+
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="equipo : ${equipos}">
+                        <td th:text="${equipo.id}"></td>
+                        <td th:if="${tipoActivo == null}" th:text="${equipo.tipoObjeto.nombre}"></td>
+                        <td th:text="${equipo.modelo.marca.nombreFabricante}"></td>
+                        <td th:text="${equipo.modelo.nombre}"></td>
+                        <td th:text="${equipo.numeroSerie}"></td>
+
+                        <td th:if="${tipoActivo == 1 or tipoActivo == 3}" 
+                            th:text="${equipo.codigoCrija}"></td>
+
+                        <td th:if="${tipoActivo == 1 or tipoActivo == 2}">
+                            <span th:if="${equipo.linea != null}" 
+                                  th:text="${equipo.linea.numeroCorto}"></span>
+                            <span th:if="${equipo.linea == null}">-</span>
+                        </td>
+
+                        <td th:if="${tipoActivo == 1 or tipoActivo == 2}">
+                             <span th:if="${equipo.movilidad == true}" style="color: #007a33; font-weight: bold;">Sí</span>
+                             <span th:if="${equipo.movilidad == false or equipo.movilidad == null}" style="color: #666;">No</span>
+                        </td>
+
+                        <td th:if="${tipoActivo == 6}" 
+                            th:text="${equipo.macAddress}"></td>
+
+                        <td>
+                            <span th:text="${equipo.estado.nombreEstado}"
+                                  th:style="${equipo.estado.nombreEstado == 'Disponible' ? 'color:green; font-weight:bold' : 'color:orange'}">
+                            </span>
+                        </td>
+                        
+                        <td>
+                            <a href="#" class="btn-action">Editar</a>
+                        </td>
+                    </tr>
+                    
+                    <tr th:if="${#lists.isEmpty(equipos)}">
+                        <td colspan="12" style="text-align:center; padding: 20px; color: #666;">
+                            No hay resultados para esta selección.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

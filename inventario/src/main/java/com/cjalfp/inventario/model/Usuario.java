@@ -20,7 +20,4 @@ public class Usuario {
 
     @Column(length = 50)
     private String ldap;
-
-    @Column(length = 100)
-    private String puesto;
 }

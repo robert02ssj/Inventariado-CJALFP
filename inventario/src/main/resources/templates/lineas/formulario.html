@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="text-align: center; margin-bottom: 20px;" th:text="${titulo}">Formulario</h2>
+
+        <div class="form-container">
+            <form th:action="@{/lineas/guardar}" th:object="${linea}" method="post">
+                
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label class="form-label">Número Corto (Extensión):</label>
+                    <input type="text" th:field="*{numeroCorto}" class="form-control" placeholder="Ej: 1234" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Número Largo (Público):</label>
+                    <input type="text" th:field="*{numeroLargo}" class="form-control" placeholder="Ej: 600123456" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">PUK:</label>
+                    <input type="text" th:field="*{puk}" class="form-control" placeholder="Ej: 88997766" />
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 15px;">
+                    <input type="checkbox" th:field="*{tieneDatos}" id="checkDatos" style="width: 20px; height: 20px; cursor: pointer;">
+                    <label for="checkDatos" style="margin: 0; cursor: pointer; font-weight: normal;">¿Tiene tarifa de Datos?</label>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/lineas" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-create">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

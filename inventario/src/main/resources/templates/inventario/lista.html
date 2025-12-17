@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+
+    <section>
+        <h2 style="margin-bottom: 20px; color: #333;">Histórico de Asignaciones</h2>
+
+        <form action="/inventario" method="get" class="search-container">
+            <input type="text" 
+                   name="busqueda" 
+                   class="search-input" 
+                   placeholder="Buscar por usuario, LDAP, serie o modelo..."
+                   th:value="${busquedaActual}">
+        </form>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>LDAP</th>
+                        <th>Equipo (Modelo)</th>
+                        <th>Nº Serie</th>
+                        <th>Fecha Asignación</th>
+                        <th>Fecha Devolución</th>
+                        <th>Estado</th> </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="inv : ${inventarios}">
+                        
+                        <td th:text="${inv.usuario.nombre + ' ' + (inv.usuario.apellidos != null ? inv.usuario.apellidos : '')}">
+                            Juan García
+                        </td>
+
+                        <td th:text="${inv.usuario.ldap}">jgarcia</td>
+
+                        <td th:text="${inv.equipo.modelo.nombre}">HP EliteBook</td>
+
+                        <td th:text="${inv.equipo.numeroSerie}">SN-12345</td>
+
+                        <td th:text="${#temporals.format(inv.fechaAsignacion, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2024 10:00
+                        </td>
+
+                        <td>
+                            <span th:if="${inv.fechaDevolucion != null}" 
+                                  th:text="${#temporals.format(inv.fechaDevolucion, 'dd/MM/yyyy HH:mm')}">
+                                02/02/2024 18:00
+                            </span>
+                            <span th:if="${inv.fechaDevolucion == null}" style="color: #007a33; font-weight: bold;">
+                                - (Activo)
+                            </span>
+                        </td>
+
+                        <td>
+                            <span th:if="${inv.fechaDevolucion == null}" 
+                                  style="padding: 4px 8px; background-color: #d1e7dd; color: #0f5132; border-radius: 4px; font-size: 0.8rem;">
+                                Asignado
+                            </span>
+                            <span th:if="${inv.fechaDevolucion != null}" 
+                                  style="padding: 4px 8px; background-color: #f8d7da; color: #842029; border-radius: 4px; font-size: 0.8rem;">
+                                Devuelto
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(inventarios)}">
+                        <td colspan="7" style="text-align:center; padding: 20px; color: #666;">
+                            No se encontraron registros de asignación.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

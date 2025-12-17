@@ -8,9 +8,8 @@ import lombok.Data;
 @Table(name = "Tipo")
 public class Tipo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo")
-    private Integer id;
+    private Integer id; // No es autoincremental en BD, lo definimos nosotros (1,2,3...)
 
     @Column(nullable = false, length = 50)
     private String nombre;
