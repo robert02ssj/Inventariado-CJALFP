@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="text-align: center; margin-bottom: 20px;" th:text="${titulo}">Formulario</h2>
+
+        <div class="form-container">
+            <form th:action="@{/docking/guardar}" th:object="${dockingStation}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Datos del Equipo</h4>
+
+                <div class="form-group">
+                    <label class="form-label">Número de Serie:</label>
+                    <input type="text" th:field="*{numeroSerie}" class="form-control" placeholder="Ej: SN-DOCK-9988" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Modelo:</label>
+                    <select th:field="*{modelo}" class="form-control" required>
+                        <option value="">-- Selecciona Modelo --</option>
+                        <option th:each="m : ${modelos}" 
+                                th:value="${m.id}" 
+                                th:text="${m.marca.nombreFabricante + ' - ' + m.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Estado:</label>
+                    <select th:field="*{estado}" class="form-control" required>
+                        <option th:each="e : ${estados}" 
+                                th:value="${e.id}" 
+                                th:text="${e.nombreEstado}">
+                        </option>
+                    </select>
+                </div>
+
+                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px;">Detalles de Red</h4>
+
+                <div class="form-group">
+                    <label class="form-label">MAC Address:</label>
+                    <input type="text" th:field="*{macAddress}" class="form-control" placeholder="Ej: AA:BB:CC:DD:EE:FF" />
+                    <small style="color: #666;">Formato recomendado: XX:XX:XX:XX:XX:XX</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observaciones:</label>
+                    <textarea th:field="*{observaciones}" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/equipos?tipo=6" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-create">Guardar Docking</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

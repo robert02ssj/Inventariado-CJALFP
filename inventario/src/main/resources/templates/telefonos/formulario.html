@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="text-align: center; margin-bottom: 20px;" th:text="${titulo}">Formulario</h2>
+
+        <div class="form-container">
+            <form th:action="@{/telefonos/guardar}" th:object="${telefono}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Datos del Dispositivo</h4>
+
+                <div class="form-group">
+                    <label class="form-label">IMEI / Nº Serie:</label>
+                    <input type="text" th:field="*{numeroSerie}" class="form-control" placeholder="Ej: 35444333..." required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Modelo:</label>
+                    <select th:field="*{modelo}" class="form-control" required>
+                        <option value="">-- Selecciona Modelo --</option>
+                        <option th:each="m : ${modelos}" 
+                                th:value="${m.id}" 
+                                th:text="${m.marca.nombreFabricante + ' - ' + m.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Estado:</label>
+                    <select th:field="*{estado}" class="form-control" required>
+                        <option th:each="e : ${estados}" 
+                                th:value="${e.id}" 
+                                th:text="${e.nombreEstado}">
+                        </option>
+                    </select>
+                </div>
+
+                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px;">Conectividad</h4>
+
+                <div class="form-group">
+                    <label class="form-label">Línea Móvil (SIM):</label>
+                    <select th:field="*{linea}" class="form-control">
+                        <option value="">-- Sin Línea (Solo Wifi/Stock) --</option>
+                        <option th:each="l : ${lineas}" 
+                                th:value="${l.id}" 
+                                th:text="${'Ext: ' + l.numeroCorto + ' (' + l.numeroLargo + ')'}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" th:field="*{movilidad}" id="checkMov" style="width: 20px; height: 20px; cursor:pointer;">
+                    <label for="checkMov" style="margin: 0; cursor: pointer;">¿Es dispositivo móvil?</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observaciones:</label>
+                    <textarea th:field="*{observaciones}" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/equipos?tipo=2" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-create">Guardar Teléfono</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

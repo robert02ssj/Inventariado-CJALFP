@@ -3,7 +3,19 @@
 <body>
 
     <section>
-        <h2 style="margin-bottom: 20px; color: #333;">Gestión Inventario TIC</h2>
+        
+        <div class="header-actions">
+            <h2 style="color: #333; margin: 0;">Gestión Inventario TIC</h2>
+            
+            <div style="display: flex; gap: 10px;">
+                <a th:if="${tipoActivo == 1}" th:href="@{/ordenadores/nuevo}" class="btn-create">+ Nuevo PC</a>
+                <a th:if="${tipoActivo == 2}" th:href="@{/telefonos/nuevo}" class="btn-create">+ Nuevo Móvil</a>
+                <a th:if="${tipoActivo == 6}" th:href="@{/docking/nuevo}" class="btn-create">+ Nueva Docking</a>
+                <a th:if="${tipoActivo == 3}" th:href="@{/pantallas/nueva}" class="btn-create">+ Nueva Pantalla</a>
+                <a th:if="${tipoActivo == 4}" th:href="@{/ratones/nuevo}" class="btn-create">+ Nuevo Ratón</a>
+                <a th:if="${tipoActivo == 5}" th:href="@{/teclados/nuevo}" class="btn-create">+ Nuevo Teclado</a>
+            </div>
+        </div>
 
         <div class="tabs-container">
             <a href="/equipos" class="tab-btn" th:classappend="${tipoActivo == null} ? 'active'">Todos</a>
@@ -15,25 +27,26 @@
             <a href="/equipos?tipo=5" class="tab-btn" th:classappend="${tipoActivo == 5} ? 'active'">Teclados</a>
         </div>
 
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Buscar por serie, modelo, usuario...">
-        </div>
+        <form action="/equipos" method="get" class="search-container">
+            <input type="hidden" name="tipo" th:value="${tipoActivo}" th:if="${tipoActivo != null}">
+            <input type="text" name="busqueda" class="search-input" 
+                   placeholder="Buscar por serie, modelo, usuario..."
+                   th:value="${busquedaActual}">
+        </form>
 
         <div class="table-responsive">
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th th:if="${tipoActivo == null}">Tipo</th> <th>Marca</th>
+                        <th th:if="${tipoActivo == null}">Tipo</th>
+                        <th>Marca</th>
                         <th>Modelo</th>
                         <th>Nº Serie / IMEI</th>
 
                         <th th:if="${tipoActivo == 1 or tipoActivo == 3}">CRIJA</th>
-
                         <th th:if="${tipoActivo == 1 or tipoActivo == 2}">Nº Línea</th>
-
                         <th th:if="${tipoActivo == 1 or tipoActivo == 2}">Movilidad</th>
-
                         <th th:if="${tipoActivo == 6}">MAC Address</th>
 
                         <th>Estado</th>
@@ -48,22 +61,16 @@
                         <td th:text="${equipo.modelo.nombre}"></td>
                         <td th:text="${equipo.numeroSerie}"></td>
 
-                        <td th:if="${tipoActivo == 1 or tipoActivo == 3}" 
-                            th:text="${equipo.codigoCrija}"></td>
-
+                        <td th:if="${tipoActivo == 1 or tipoActivo == 3}" th:text="${equipo.codigoCrija}"></td>
                         <td th:if="${tipoActivo == 1 or tipoActivo == 2}">
-                            <span th:if="${equipo.linea != null}" 
-                                  th:text="${equipo.linea.numeroCorto}"></span>
+                            <span th:if="${equipo.linea != null}" th:text="${equipo.linea.numeroCorto}"></span>
                             <span th:if="${equipo.linea == null}">-</span>
                         </td>
-
                         <td th:if="${tipoActivo == 1 or tipoActivo == 2}">
                              <span th:if="${equipo.movilidad == true}" style="color: #007a33; font-weight: bold;">Sí</span>
                              <span th:if="${equipo.movilidad == false or equipo.movilidad == null}" style="color: #666;">No</span>
                         </td>
-
-                        <td th:if="${tipoActivo == 6}" 
-                            th:text="${equipo.macAddress}"></td>
+                        <td th:if="${tipoActivo == 6}" th:text="${equipo.macAddress}"></td>
 
                         <td>
                             <span th:text="${equipo.estado.nombreEstado}"
@@ -72,14 +79,34 @@
                         </td>
                         
                         <td>
-                            <a href="#" class="btn-action">Editar</a>
+                            <div th:if="${equipo.tipoObjeto.id == 1}" style="display: inline-flex; gap: 5px;">
+                                <a th:href="@{/ordenadores/editar/{id}(id=${equipo.id})}" class="btn-action">Editar</a>
+                                <a th:href="@{/ordenadores/borrar/{id}(id=${equipo.id})}" class="btn-action btn-danger" onclick="return confirm('¿Borrar PC?');">Borrar</a>
+                            </div>
+                            <div th:if="${equipo.tipoObjeto.id == 2}" style="display: inline-flex; gap: 5px;">
+                                <a th:href="@{/telefonos/editar/{id}(id=${equipo.id})}" class="btn-action">Editar</a>
+                                <a th:href="@{/telefonos/borrar/{id}(id=${equipo.id})}" class="btn-action btn-danger" onclick="return confirm('¿Borrar Teléfono?');">Borrar</a>
+                            </div>
+                            <div th:if="${equipo.tipoObjeto.id == 3}" style="display: inline-flex; gap: 5px;">
+                                <a th:href="@{/pantallas/editar/{id}(id=${equipo.id})}" class="btn-action">Editar</a>
+                                <a th:href="@{/pantallas/borrar/{id}(id=${equipo.id})}" class="btn-action btn-danger" onclick="return confirm('¿Borrar Pantalla?');">Borrar</a>
+                            </div>
+                            <div th:if="${equipo.tipoObjeto.id == 4}" style="display: inline-flex; gap: 5px;">
+                                <a th:href="@{/ratones/editar/{id}(id=${equipo.id})}" class="btn-action">Editar</a>
+                                <a th:href="@{/ratones/borrar/{id}(id=${equipo.id})}" class="btn-action btn-danger" onclick="return confirm('¿Borrar Ratón?');">Borrar</a>
+                            </div>
+                            <div th:if="${equipo.tipoObjeto.id == 5}" style="display: inline-flex; gap: 5px;">
+                                <a th:href="@{/teclados/editar/{id}(id=${equipo.id})}" class="btn-action">Editar</a>
+                                <a th:href="@{/teclados/borrar/{id}(id=${equipo.id})}" class="btn-action btn-danger" onclick="return confirm('¿Borrar Teclado?');">Borrar</a>
+                            </div>
+                            <div th:if="${equipo.tipoObjeto.id == 6}" style="display: inline-flex; gap: 5px;">
+                                <a th:href="@{/docking/editar/{id}(id=${equipo.id})}" class="btn-action">Editar</a>
+                                <a th:href="@{/docking/borrar/{id}(id=${equipo.id})}" class="btn-action btn-danger" onclick="return confirm('¿Borrar Docking?');">Borrar</a>
+                            </div>
                         </td>
                     </tr>
-                    
                     <tr th:if="${#lists.isEmpty(equipos)}">
-                        <td colspan="12" style="text-align:center; padding: 20px; color: #666;">
-                            No hay resultados para esta selección.
-                        </td>
+                        <td colspan="12" style="text-align:center; padding: 20px; color: #666;">No hay resultados.</td>
                     </tr>
                 </tbody>
             </table>
