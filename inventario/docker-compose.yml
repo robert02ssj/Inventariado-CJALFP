@@ -1,0 +1,30 @@
+services:
+  # Tu aplicación Spring Boot
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      # OJO AQUÍ: Usamos 'db' como host, no localhost
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/inventario_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      # JPA actualizará las tablas automáticamente
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+  # La Base de Datos
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: inventario_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
