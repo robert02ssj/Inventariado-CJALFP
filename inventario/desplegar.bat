@@ -1,10 +1,13 @@
 @echo off
+:: Esto arregla los caracteres raros para usar UTF-8
+chcp 65001 > nul
+
 echo ==========================================
 echo 🚀 DESPLIEGUE TOTAL (MODO DOCKER PURO)
 echo ==========================================
 echo.
 echo El contenedor se encargara de compilar el codigo...
-echo Esto puede tardar un poco la primera vez.
+echo ☕ Esto puede tardar un poco la primera vez (descargando Maven y Java).
 
 echo.
 echo 🐳 Levantando servicios...

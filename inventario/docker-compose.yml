@@ -1,5 +1,4 @@
 services:
-  # SERVICIO 1: TU APLICACIÓN
   app:
     build: .
     ports:
@@ -7,20 +6,17 @@ services:
     depends_on:
       - mysqldb
     environment:
-      # Conectamos al servicio 'mysqldb' a la base de datos 'Inventario'
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/Inventario?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      # 'update' es útil para que cree las tablas automáticamente al arrancar
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
-  # SERVICIO 2: BASE DE DATOS
+  
   mysqldb:
     image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: Inventario # IMPORTANTE: Coincide con tu código
+      MYSQL_DATABASE: Inventario
     ports:
       - "3306:3306"
     volumes:
