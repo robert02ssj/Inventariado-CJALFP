@@ -1,15 +1,14 @@
-# Usamos Java 21 (versión ligera Alpine)
-FROM eclipse-temurin:21-jdk-alpine
+# Usamos una imagen base oficial y estable de Java 21
+FROM openjdk:21-jdk-slim
 
-# Carpeta de trabajo dentro del contenedor
+# Creamos la carpeta dentro del contenedor
 WORKDIR /app
 
-# Copiamos el .jar (Asegúrate de haber hecho 'mvn clean package')
-# Como hemos puesto el <finalName>app</finalName>, siempre se llamará así.
+# Copiamos el JAR generado (que gracias al pom.xml se llama app.jar)
 COPY target/app.jar app.jar
 
-# Puerto que expone tu app (Spring Boot por defecto usa el 8080)
+# Exponemos el puerto
 EXPOSE 8080
 
-# Comando de arranque
+# Comando para iniciar la aplicación
 ENTRYPOINT ["java", "-jar", "app.jar"]
