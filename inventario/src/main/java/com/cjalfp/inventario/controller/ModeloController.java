@@ -22,7 +22,12 @@ public class ModeloController {
 
     // --- 1. LISTAR ---
     @GetMapping
-    public String listarModelos(@RequestParam(required = false) String busqueda, Model model) {
+    public String listarModelos(
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        
+        int pageSize = 10;
         List<Modelo> lista = modeloRepository.findAll();
 
         if (busqueda != null && !busqueda.isEmpty()) {
@@ -33,7 +38,18 @@ public class ModeloController {
                     .collect(Collectors.toList());
         }
 
-        model.addAttribute("modelos", lista);
+        // Aplicar paginación manual
+        int totalItems = lista.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        int fromIndex = page * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        
+        List<Modelo> modelosPaginados = lista.subList(fromIndex, toIndex);
+
+        model.addAttribute("modelos", modelosPaginados);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         model.addAttribute("busquedaActual", busqueda);
         return "modelos/lista";
     }

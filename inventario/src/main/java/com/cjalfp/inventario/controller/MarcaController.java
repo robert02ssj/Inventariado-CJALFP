@@ -19,7 +19,12 @@ public class MarcaController {
 
     // --- 1. LISTAR ---
     @GetMapping
-    public String listarMarcas(@RequestParam(required = false) String busqueda, Model model) {
+    public String listarMarcas(
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        
+        int pageSize = 10;
         List<Marca> lista = marcaRepository.findAll();
 
         if (busqueda != null && !busqueda.isEmpty()) {
@@ -28,7 +33,18 @@ public class MarcaController {
                     .collect(Collectors.toList());
         }
 
-        model.addAttribute("marcas", lista);
+        // Aplicar paginación manual
+        int totalItems = lista.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        int fromIndex = page * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        
+        List<Marca> marcasPaginadas = lista.subList(fromIndex, toIndex);
+
+        model.addAttribute("marcas", marcasPaginadas);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         model.addAttribute("busquedaActual", busqueda);
         return "marcas/lista";
     }

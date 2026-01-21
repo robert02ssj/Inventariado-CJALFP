@@ -19,7 +19,12 @@ public class LineaController {
 
     // --- 1. LISTAR ---
     @GetMapping
-    public String listarLineas(@RequestParam(required = false) String busqueda, Model model) {
+    public String listarLineas(
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        
+        int pageSize = 10;
         List<Linea> lista = lineaRepository.findAll();
 
         if (busqueda != null && !busqueda.isEmpty()) {
@@ -30,7 +35,18 @@ public class LineaController {
                     .collect(Collectors.toList());
         }
 
-        model.addAttribute("lineas", lista);
+        // Aplicar paginación manual
+        int totalItems = lista.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        int fromIndex = page * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        
+        List<Linea> lineasPaginadas = lista.subList(fromIndex, toIndex);
+
+        model.addAttribute("lineas", lineasPaginadas);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         model.addAttribute("busquedaActual", busqueda);
         return "lineas/lista";
     }

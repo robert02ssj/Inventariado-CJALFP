@@ -23,8 +23,11 @@ public class EquipoController {
     public String listarEquipos(
             @RequestParam(required = false) Integer tipo,
             @RequestParam(required = false) String busqueda,
+            @RequestParam(defaultValue = "0") int page,
             Model model) {
 
+        int pageSize = 10;
+        
         // 1. Obtenemos todos los equipos (en el futuro podemos optimizar esto en BD)
         List<Equipo> equipos = equipoRepository.findAll();
 
@@ -46,8 +49,19 @@ public class EquipoController {
                     .collect(Collectors.toList());
         }
 
-        // 4. Pasamos los datos a la vista
-        model.addAttribute("equipos", equipos);
+        // 4. Aplicar paginación manual
+        int totalItems = equipos.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        int fromIndex = page * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        
+        List<Equipo> equiposPaginados = equipos.subList(fromIndex, toIndex);
+
+        // 5. Pasamos los datos a la vista
+        model.addAttribute("equipos", equiposPaginados);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         model.addAttribute("tipoActivo", tipo); // Para saber qué pestaña pintar de verde
         model.addAttribute("busquedaActual", busqueda); // Para mantener el texto en el input
 
