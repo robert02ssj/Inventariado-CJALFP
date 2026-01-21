@@ -14,4 +14,7 @@ public interface EquipoRepository extends JpaRepository<Equipo, Integer> {
     // Contar equipos por tipo (para estadísticas)
     @Query("SELECT COUNT(e) FROM Equipo e WHERE e.tipoObjeto.id = :tipoId")
     long countByTipoObjetoId(@Param("tipoId") Integer tipoId);
+    
+    // Contar equipos por estado (para estadísticas)
+    long countByEstadoId(Integer estadoId);
 }

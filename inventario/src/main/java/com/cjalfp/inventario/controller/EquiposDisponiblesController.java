@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class EquiposDisponiblesController {
         for (Equipo equipo : equiposDisponibles) {
             if (equipo.getTipoObjeto() != null) {
                 String nombreTipo = equipo.getTipoObjeto().getNombre();
-                equiposPorTipo.computeIfAbsent(nombreTipo, k -> new java.util.ArrayList<>()).add(equipo);
+                equiposPorTipo.computeIfAbsent(nombreTipo, k -> new ArrayList<>()).add(equipo);
             }
         }
         

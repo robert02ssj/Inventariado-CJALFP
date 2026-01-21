@@ -50,7 +50,8 @@ public class DashboardEstadisticoController {
         Map<String, Double> porcentajesPorEstado = new HashMap<>();
         
         for (Estado estado : estados) {
-            long count = equipoRepository.findByEstadoId(estado.getId()).size();
+            // Usar query optimizada en lugar de cargar todos los equipos
+            long count = equipoRepository.countByEstadoId(estado.getId());
             equiposPorEstado.put(estado.getNombreEstado(), count);
             
             if (totalEquipos > 0) {

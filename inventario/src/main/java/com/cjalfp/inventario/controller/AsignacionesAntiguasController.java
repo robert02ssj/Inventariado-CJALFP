@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/consultas/asignaciones-antiguas")
@@ -29,7 +30,7 @@ public class AsignacionesAntiguasController {
         LocalDateTime hace365Dias = ahora.minusDays(365);
         LocalDateTime hace180Dias = ahora.minusDays(180);
         
-        // Obtener asignaciones anteriores a hace 365 días
+        // Obtener asignaciones anteriores a hace 365 días (muy antiguas)
         List<Inventario> asignacionesMuyAntiguas = inventarioRepository
             .findAsignacionesAnterioresA(hace365Dias);
         
@@ -37,12 +38,16 @@ public class AsignacionesAntiguasController {
         List<Inventario> todasAntiguas = inventarioRepository
             .findAsignacionesAnterioresA(hace180Dias);
         
-        List<Inventario> asignacionesAntiguas = new ArrayList<>();
-        for (Inventario inv : todasAntiguas) {
-            if (!asignacionesMuyAntiguas.contains(inv)) {
-                asignacionesAntiguas.add(inv);
-            }
+        // Usar HashSet para optimizar la búsqueda (O(1) en lugar de O(n))
+        Set<Integer> idsMuyAntiguas = new HashSet<>();
+        for (Inventario inv : asignacionesMuyAntiguas) {
+            idsMuyAntiguas.add(inv.getId());
         }
+        
+        // Filtrar asignaciones antiguas (excluir muy antiguas)
+        List<Inventario> asignacionesAntiguas = todasAntiguas.stream()
+            .filter(inv -> !idsMuyAntiguas.contains(inv.getId()))
+            .toList();
         
         // Calcular días para cada asignación
         Map<Integer, Long> diasPorAsignacion = new HashMap<>();
