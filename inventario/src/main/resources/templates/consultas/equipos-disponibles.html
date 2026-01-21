@@ -52,7 +52,7 @@
                         <tbody>
                             <tr th:each="equipo : ${entry.value}">
                                 <td th:text="${equipo.modelo.nombre}">Modelo</td>
-                                <td th:text="${equipo.modelo.marca.nombre}">Marca</td>
+                                <td th:text="${equipo.modelo.marca.nombreFabricante}">Marca</td>
                                 <td th:text="${equipo.numeroSerie ?: 'N/A'}">Serie</td>
                                 <td>
                                     <span class="badge badge-success" th:text="${equipo.estado.nombreEstado}">Disponible</span>
