@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,9 @@ public class LineaController {
         int fromIndex = page * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, totalItems);
         
-        List<Linea> lineasPaginadas = lista.subList(fromIndex, toIndex);
+        List<Linea> lineasPaginadas = (fromIndex < totalItems) 
+            ? lista.subList(fromIndex, toIndex) 
+            : new ArrayList<>();
 
         model.addAttribute("lineas", lineasPaginadas);
         model.addAttribute("currentPage", page);

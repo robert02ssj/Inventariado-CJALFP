@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,9 @@ public class EquipoController {
         int fromIndex = page * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, totalItems);
         
-        List<Equipo> equiposPaginados = equipos.subList(fromIndex, toIndex);
+        List<Equipo> equiposPaginados = (fromIndex < totalItems) 
+            ? equipos.subList(fromIndex, toIndex) 
+            : new ArrayList<>();
 
         // 5. Pasamos los datos a la vista
         model.addAttribute("equipos", equiposPaginados);

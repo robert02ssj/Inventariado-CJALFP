@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,9 @@ public class MarcaController {
         int fromIndex = page * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, totalItems);
         
-        List<Marca> marcasPaginadas = lista.subList(fromIndex, toIndex);
+        List<Marca> marcasPaginadas = (fromIndex < totalItems) 
+            ? lista.subList(fromIndex, toIndex) 
+            : new ArrayList<>();
 
         model.addAttribute("marcas", marcasPaginadas);
         model.addAttribute("currentPage", page);

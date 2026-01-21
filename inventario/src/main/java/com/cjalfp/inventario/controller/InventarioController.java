@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,9 @@ public class InventarioController {
         int fromIndex = page * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, totalItems);
         
-        List<Inventario> inventariosPaginados = lista.subList(fromIndex, toIndex);
+        List<Inventario> inventariosPaginados = (fromIndex < totalItems) 
+            ? lista.subList(fromIndex, toIndex) 
+            : new ArrayList<>();
 
         model.addAttribute("inventarios", inventariosPaginados);
         model.addAttribute("currentPage", page);

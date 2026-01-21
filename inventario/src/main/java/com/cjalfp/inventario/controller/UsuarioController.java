@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,9 @@ public class UsuarioController {
         int fromIndex = page * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, totalItems);
         
-        List<Usuario> usuariosPaginados = lista.subList(fromIndex, toIndex);
+        List<Usuario> usuariosPaginados = (fromIndex < totalItems) 
+            ? lista.subList(fromIndex, toIndex) 
+            : new ArrayList<>();
         
         model.addAttribute("usuarios", usuariosPaginados);
         model.addAttribute("currentPage", page);
