@@ -32,6 +32,11 @@ public class DashboardEstadisticoController {
     @GetMapping
     public String dashboardEstadistico(Model model) {
         
+        // Estados del sistema:
+        // 1 = Disponible
+        // 2 = Asignado
+        // 3 = Averiado/Retirado
+        
         // 1. Equipos por tipo
         List<Tipo> tipos = tipoRepository.findAll();
         Map<String, Long> equiposPorTipo = new HashMap<>();
@@ -44,7 +49,7 @@ public class DashboardEstadisticoController {
             totalEquipos += count;
         }
         
-        // 2. Equipos por estado
+        // 2. Equipos por estado (dinámico, funciona con cualquier número de estados)
         List<Estado> estados = estadoRepository.findAll();
         Map<String, Long> equiposPorEstado = new HashMap<>();
         Map<String, Double> porcentajesPorEstado = new HashMap<>();
