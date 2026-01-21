@@ -14,7 +14,7 @@
                 <a href="/" class="header-link">Gestión Inventario TIC</a>
             </h1>
             <!-- Botón solo visible si NO estamos en el index -->
-            <a href="/" class="btn-home" th:unless="${#httpServletRequest.requestURI == '/'}">
+            <a href="/" class="btn-home" th:unless="${#request.requestURI == '/'}">
                 🏠 Inicio
             </a>
         </div>
