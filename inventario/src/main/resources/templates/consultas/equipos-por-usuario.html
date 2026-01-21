@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="color: #007a33; margin-bottom: 1.5rem;">📋 Equipos por Usuario</h2>
+        
+        <!-- Buscador -->
+        <div class="search-container">
+            <form method="get" action="/consultas/equipos-por-usuario" style="width: 100%; max-width: 600px; display: flex; gap: 10px;">
+                <input type="text" 
+                       name="busqueda" 
+                       class="search-input" 
+                       placeholder="🔍 Buscar por nombre, apellidos o LDAP..."
+                       th:value="${busquedaActual}"
+                       style="flex: 1;">
+                <button type="submit" class="btn-create">Buscar</button>
+                <a th:if="${busquedaActual != null}" 
+                   href="/consultas/equipos-por-usuario" 
+                   class="btn-secondary" 
+                   style="padding: 10px 20px; text-decoration: none;">Limpiar</a>
+            </form>
+        </div>
+        
+        <div th:if="${totalItems == 0}" class="alert-consulta alert-warning">
+            <p style="margin: 0;">⚠️ No se encontraron usuarios con equipos asignados.</p>
+        </div>
+        
+        <!-- Lista de usuarios con sus equipos -->
+        <div th:if="${totalItems > 0}">
+            <div th:each="entry : ${equiposPorUsuario}" class="usuario-section">
+                <h3 style="color: #007a33; margin-bottom: 10px;">
+                    👤 <span th:text="${entry.key.nombre + ' ' + entry.key.apellidos}">Usuario</span>
+                    <span th:if="${entry.key.ldap != null}" 
+                          style="color: #666; font-size: 0.9rem; font-weight: normal;">
+                        (<span th:text="${entry.key.ldap}">ldap</span>)
+                    </span>
+                </h3>
+                <p style="color: #555; margin-bottom: 15px;">
+                    Total equipos asignados: <strong th:text="${entry.value.size()}">0</strong>
+                </p>
+                
+                <div class="table-responsive">
+                    <table class="data-table equipo-tabla">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Marca/Modelo</th>
+                                <th>Nº Serie / IMEI</th>
+                                <th>Fecha Asignación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="inv : ${entry.value}">
+                                <td th:text="${inv.equipo.tipoObjeto != null ? inv.equipo.tipoObjeto.nombre : 'N/A'}">Tipo</td>
+                                <td th:text="${inv.equipo.modelo.nombre}">Modelo</td>
+                                <td th:text="${inv.equipo.numeroSerie ?: 'N/A'}">Serie</td>
+                                <td th:text="${#temporals.format(inv.fechaAsignacion, 'dd/MM/yyyy')}">Fecha</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Paginación -->
+        <div th:if="${totalPages > 1}" class="pagination-container">
+            <div class="pagination-info">
+                Mostrando página <strong th:text="${currentPage + 1}">1</strong> de <strong th:text="${totalPages}">1</strong>
+                (Total: <strong th:text="${totalItems}">0</strong> usuarios)
+            </div>
+            
+            <div class="pagination-controls">
+                <a th:if="${currentPage > 0}" 
+                   th:href="@{/consultas/equipos-por-usuario(page=${currentPage - 1}, busqueda=${busquedaActual})}" 
+                   class="page-btn">◀ Anterior</a>
+                
+                <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a th:if="${i == currentPage}" 
+                       th:href="@{/consultas/equipos-por-usuario(page=${i}, busqueda=${busquedaActual})}" 
+                       class="page-number active"
+                       th:text="${i + 1}">1</a>
+                    <a th:if="${i != currentPage && (i < 3 || i >= totalPages - 3 || (i >= currentPage - 2 && i <= currentPage + 2))}" 
+                       th:href="@{/consultas/equipos-por-usuario(page=${i}, busqueda=${busquedaActual})}" 
+                       class="page-number"
+                       th:text="${i + 1}">1</a>
+                </th:block>
+                
+                <a th:if="${currentPage < totalPages - 1}" 
+                   th:href="@{/consultas/equipos-por-usuario(page=${currentPage + 1}, busqueda=${busquedaActual})}" 
+                   class="page-btn">Siguiente ▶</a>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/consultas" class="btn-secondary" style="padding: 10px 20px; text-decoration: none;">
+                ← Volver a Consultas
+            </a>
+        </div>
+    </section>
+</body>
+</html>

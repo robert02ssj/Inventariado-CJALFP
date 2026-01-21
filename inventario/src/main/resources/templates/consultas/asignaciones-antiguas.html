@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="color: #007a33; margin-bottom: 1.5rem;">🔴 Equipos con Asignación Antigua</h2>
+        
+        <p style="color: #666; margin-bottom: 2rem;">
+            Esta consulta muestra equipos que llevan mucho tiempo asignados al mismo usuario. 
+            Útil para detectar equipos que necesitan renovación o revisión.
+        </p>
+        
+        <!-- Sección ROJA: Más de 1 año -->
+        <div th:if="${asignacionesMuyAntiguas.size() > 0}">
+            <div class="alert-consulta alert-danger">
+                <h3 style="margin: 0 0 10px 0; color: #721c24;">
+                    🔴 MÁS DE 1 AÑO (<span th:text="${asignacionesMuyAntiguas.size()}">0</span> equipos)
+                </h3>
+                <p style="margin: 0;">Equipos asignados hace más de 365 días</p>
+            </div>
+            
+            <div th:each="inv : ${asignacionesMuyAntiguas}" 
+                 style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #dc3545;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <h4 style="margin: 0 0 5px 0; color: #333;">
+                            <span th:text="${inv.equipo.tipoObjeto != null ? inv.equipo.tipoObjeto.nombre : 'Equipo'}">Tipo</span>: 
+                            <span th:text="${inv.equipo.modelo.nombre}">Modelo</span>
+                        </h4>
+                        <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                            Nº Serie: <span th:text="${inv.equipo.numeroSerie ?: 'N/A'}">Serie</span>
+                        </p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <p style="margin: 0;">
+                            👤 <strong th:text="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}">Usuario</strong>
+                        </p>
+                    </div>
+                    <div style="text-align: right; min-width: 150px;">
+                        <p style="margin: 0;">
+                            📅 <span th:text="${#temporals.format(inv.fechaAsignacion, 'dd/MM/yyyy')}">Fecha</span>
+                        </p>
+                        <p style="margin: 5px 0 0 0; color: #dc3545; font-weight: bold;">
+                            ⏱️ <span th:text="${diasPorAsignacion[inv.id]}">0</span> días
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección AMARILLA: Más de 6 meses -->
+        <div th:if="${asignacionesAntiguas.size() > 0}" style="margin-top: 30px;">
+            <div class="alert-consulta alert-warning">
+                <h3 style="margin: 0 0 10px 0; color: #856404;">
+                    🟡 MÁS DE 6 MESES (<span th:text="${asignacionesAntiguas.size()}">0</span> equipos)
+                </h3>
+                <p style="margin: 0;">Equipos asignados hace más de 180 días</p>
+            </div>
+            
+            <div th:each="inv : ${asignacionesAntiguas}" 
+                 style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <h4 style="margin: 0 0 5px 0; color: #333;">
+                            <span th:text="${inv.equipo.tipoObjeto != null ? inv.equipo.tipoObjeto.nombre : 'Equipo'}">Tipo</span>: 
+                            <span th:text="${inv.equipo.modelo.nombre}">Modelo</span>
+                        </h4>
+                        <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                            Nº Serie: <span th:text="${inv.equipo.numeroSerie ?: 'N/A'}">Serie</span>
+                        </p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <p style="margin: 0;">
+                            👤 <strong th:text="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}">Usuario</strong>
+                        </p>
+                    </div>
+                    <div style="text-align: right; min-width: 150px;">
+                        <p style="margin: 0;">
+                            📅 <span th:text="${#temporals.format(inv.fechaAsignacion, 'dd/MM/yyyy')}">Fecha</span>
+                        </p>
+                        <p style="margin: 5px 0 0 0; color: #ffc107; font-weight: bold;">
+                            ⏱️ <span th:text="${diasPorAsignacion[inv.id]}">0</span> días
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mensaje si no hay asignaciones antiguas -->
+        <div th:if="${asignacionesMuyAntiguas.size() == 0 && asignacionesAntiguas.size() == 0}" 
+             class="alert-consulta badge-success" style="background: #d4edda; border-left-color: #28a745;">
+            <p style="margin: 0;">✅ ¡Excelente! No hay asignaciones antiguas. Todas las asignaciones son recientes.</p>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/consultas" class="btn-secondary" style="padding: 10px 20px; text-decoration: none;">
+                ← Volver a Consultas
+            </a>
+        </div>
+    </section>
+</body>
+</html>

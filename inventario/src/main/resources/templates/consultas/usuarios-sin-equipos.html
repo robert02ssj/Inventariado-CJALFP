@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="color: #007a33; margin-bottom: 1.5rem;">⚠️ Usuarios sin Equipos Asignados</h2>
+        
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; font-size: 1.1rem;">
+                ⚠️ Total: <strong th:text="${usuariosSinEquiposCount}">0</strong> usuarios de 
+                <strong th:text="${totalUsuarios}">0</strong> sin equipos 
+                (<strong th:text="${#numbers.formatDecimal(porcentaje, 1, 1)}">0.0</strong>%)
+            </p>
+        </div>
+        
+        <div th:if="${usuariosSinEquiposCount == 0}" class="alert-consulta badge-success" style="background: #d4edda; border-left-color: #28a745;">
+            <p style="margin: 0;">✅ ¡Excelente! Todos los usuarios tienen equipos asignados.</p>
+        </div>
+        
+        <div th:if="${usuariosSinEquiposCount > 0}">
+            <div th:each="usuario : ${usuariosSinEquipos}" 
+                 style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="margin: 0 0 5px 0; color: #333;">
+                        👤 <span th:text="${usuario.nombre + ' ' + usuario.apellidos}">Usuario</span>
+                    </h4>
+                    <p style="margin: 0; color: #666;">
+                        <span th:if="${usuario.ldap != null}">
+                            LDAP: <span th:text="${usuario.ldap}">ldap</span>
+                        </span>
+                        <span th:if="${usuario.ldap == null}">Sin LDAP registrado</span>
+                    </p>
+                </div>
+                <div>
+                    <a th:href="@{/inventario/asignar(usuarioId=${usuario.id})}" 
+                       class="btn-create" 
+                       style="text-decoration: none; white-space: nowrap;">
+                        ➕ Asignar Equipo
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/consultas" class="btn-secondary" style="padding: 10px 20px; text-decoration: none;">
+                ← Volver a Consultas
+            </a>
+        </div>
+    </section>
+</body>
+</html>

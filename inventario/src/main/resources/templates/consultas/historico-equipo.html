@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="color: #007a33; margin-bottom: 1.5rem;">📜 Histórico de Equipo</h2>
+        
+        <!-- Buscador -->
+        <div class="search-container">
+            <form method="get" action="/consultas/historico-equipo" style="width: 100%; max-width: 600px; display: flex; gap: 10px;">
+                <input type="text" 
+                       name="serie" 
+                       class="search-input" 
+                       placeholder="🔍 Buscar por Nº Serie o IMEI..."
+                       th:value="${busquedaActual}"
+                       style="flex: 1;"
+                       required>
+                <button type="submit" class="btn-create">Buscar</button>
+            </form>
+        </div>
+        
+        <!-- Mensaje de no encontrado -->
+        <div th:if="${encontrado != null && !encontrado}" class="alert-consulta alert-warning">
+            <p style="margin: 0;" th:text="${mensaje}">No se encontró el equipo</p>
+        </div>
+        
+        <!-- Resultado -->
+        <div th:if="${encontrado != null && encontrado}">
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #007a33; margin-bottom: 20px;">
+                <h3 style="color: #007a33; margin-bottom: 15px;">📦 EQUIPO</h3>
+                <p style="margin: 5px 0;">
+                    <strong>Tipo:</strong> <span th:text="${equipo.tipoObjeto != null ? equipo.tipoObjeto.nombre : 'N/A'}">Tipo</span>
+                </p>
+                <p style="margin: 5px 0;">
+                    <strong>Modelo:</strong> <span th:text="${equipo.modelo.nombre}">Modelo</span>
+                </p>
+                <p style="margin: 5px 0;">
+                    <strong>Nº Serie:</strong> <span th:text="${equipo.numeroSerie}">Serie</span>
+                </p>
+                <p style="margin: 5px 0;">
+                    <strong>Estado:</strong> <span th:text="${equipo.estado.nombreEstado}">Estado</span>
+                </p>
+            </div>
+            
+            <h3 style="color: #007a33; margin-bottom: 15px;">
+                📅 HISTORIAL (<span th:text="${historial.size()}">0</span> asignaciones)
+            </h3>
+            
+            <div th:each="inv, iterStat : ${historial}" 
+                 style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #28a745;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span th:if="${inv.fechaDevolucion == null}" 
+                              class="badge badge-success">🟢 Activa</span>
+                        <span th:if="${inv.fechaDevolucion != null}" 
+                              class="badge badge-info">✅ Cerrada</span>
+                        
+                        <strong style="margin-left: 10px;">
+                            <span th:text="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}">Usuario</span>
+                        </strong>
+                        
+                        <span th:if="${inv.usuario.ldap != null}" 
+                              style="color: #666; margin-left: 5px;">
+                            (<span th:text="${inv.usuario.ldap}">ldap</span>)
+                        </span>
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <div>
+                            📅 <span th:text="${#temporals.format(inv.fechaAsignacion, 'dd/MM/yyyy')}">Fecha inicio</span>
+                            <span th:if="${inv.fechaDevolucion != null}">
+                                - <span th:text="${#temporals.format(inv.fechaDevolucion, 'dd/MM/yyyy')}">Fecha fin</span>
+                            </span>
+                            <span th:if="${inv.fechaDevolucion == null}">
+                                - <strong>Actualidad</strong>
+                            </span>
+                        </div>
+                        <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">
+                            ⏱️ <span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(inv.fechaAsignacion, inv.fechaDevolucion != null ? inv.fechaDevolucion : T(java.time.LocalDateTime).now())}">0</span> días
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/consultas" class="btn-secondary" style="padding: 10px 20px; text-decoration: none;">
+                ← Volver a Consultas
+            </a>
+        </div>
+    </section>
+</body>
+</html>
