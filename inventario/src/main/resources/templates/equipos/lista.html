@@ -19,7 +19,7 @@
 
         <div class="filter-container">
             <label for="tipoEquipo" class="filter-label">Tipo de equipo:</label>
-            <select id="tipoEquipo" class="filter-select" onchange="window.location.href='/equipos?tipo=' + (this.value === '' ? '' : this.value)">
+            <select id="tipoEquipo" class="filter-select" onchange="window.location.href = this.value === '' ? '/equipos' : '/equipos?tipo=' + this.value">
                 <option value="" th:selected="${tipoActivo == null}">Todos los equipos</option>
                 <option value="1" th:selected="${tipoActivo == 1}">Ordenadores</option>
                 <option value="2" th:selected="${tipoActivo == 2}">Teléfonos</option>
