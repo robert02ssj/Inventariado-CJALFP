@@ -16,7 +16,8 @@ TRUNCATE TABLE Modelo;
 TRUNCATE TABLE Marca;
 TRUNCATE TABLE Linea;
 TRUNCATE TABLE Usuario;
-TRUNCATE TABLE Estado;
+-- NO truncar Estado ni Tipo para preservar datos existentes
+-- TRUNCATE TABLE Estado;
 -- TRUNCATE TABLE Tipo; -- No borramos Tipo porque son fijos (1..6)
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -24,13 +25,21 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 2. DICCIONARIOS BÁSICOS
 -- =======================================================
 
--- Estados
-INSERT INTO Estado (nombre_estado) VALUES 
-('Disponible'), 
-('Asignado'), 
-('Averiado'), 
-('Baja'), 
-('En Reparación');
+-- Estados (usar INSERT IGNORE para evitar duplicados)
+INSERT IGNORE INTO Estado (id_estado, nombre_estado) VALUES
+(1, 'Disponible'),
+(2, 'Asignado'),
+(3, 'En reparación'),
+(4, 'De baja');
+
+-- TipoObjeto (usar INSERT IGNORE para evitar duplicados)
+INSERT IGNORE INTO Tipo (id_tipo, nombre) VALUES
+(1, 'Ordenador'),
+(2, 'Teléfono'),
+(3, 'Pantalla'),
+(4, 'Ratón'),
+(5, 'Teclado'),
+(6, 'Docking Station');
 
 -- Marcas
 INSERT INTO Marca (nombre_fabricante) VALUES 
@@ -92,7 +101,7 @@ VALUES (3, 1, 4, 2, 'MJ009988', 'PC de sobremesa secretaría');
 INSERT INTO Equipos (id_equipo, id_tipo, id_modelo, id_estado, numero_serie, observaciones) 
 VALUES (4, 2, 2, 2, 'IMEI35444333222111', 'Pantalla sin protector');
 
--- EQUIPO 5: iPhone 13 (Averiado)
+-- EQUIPO 5: iPhone 13 (En reparación)
 INSERT INTO Equipos (id_equipo, id_tipo, id_modelo, id_estado, numero_serie, observaciones) 
 VALUES (5, 2, 3, 3, 'IMEI998877665544', 'Pantalla rota');
 
