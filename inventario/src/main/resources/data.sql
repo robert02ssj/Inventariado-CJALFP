@@ -101,7 +101,7 @@ VALUES (3, 1, 4, 2, 'MJ009988', 'PC de sobremesa secretaría');
 INSERT INTO Equipos (id_equipo, id_tipo, id_modelo, id_estado, numero_serie, observaciones) 
 VALUES (4, 2, 2, 2, 'IMEI35444333222111', 'Pantalla sin protector');
 
--- EQUIPO 5: iPhone 13 (Averiado)
+-- EQUIPO 5: iPhone 13 (En reparación)
 INSERT INTO Equipos (id_equipo, id_tipo, id_modelo, id_estado, numero_serie, observaciones) 
 VALUES (5, 2, 3, 3, 'IMEI998877665544', 'Pantalla rota');
 
