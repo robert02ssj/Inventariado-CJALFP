@@ -27,6 +27,9 @@ public class Inventario {
     @Column(name = "fecha_devolucion")
     private LocalDateTime fechaDevolucion;
 
+    @Column(name = "ruta_pdf", length = 255)
+    private String rutaPdf;
+
     @PrePersist
     protected void onCreate() {
         if (fechaAsignacion == null) {

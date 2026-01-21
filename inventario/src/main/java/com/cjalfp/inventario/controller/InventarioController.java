@@ -7,12 +7,23 @@ import com.cjalfp.inventario.repository.EquipoRepository;
 import com.cjalfp.inventario.repository.EstadoRepository;
 import com.cjalfp.inventario.repository.InventarioRepository;
 import com.cjalfp.inventario.repository.UsuarioRepository;
+import com.cjalfp.inventario.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +38,7 @@ public class InventarioController {
     private final EquipoRepository equipoRepository;
     private final UsuarioRepository usuarioRepository;
     private final EstadoRepository estadoRepository;
+    private final FileStorageService fileStorageService;
 
     // --- 1. LISTAR HISTÓRICO ---
     @GetMapping
@@ -91,12 +103,22 @@ public class InventarioController {
     // 2 = Asignado
     // 3 = Averiado/Retirado
     @PostMapping("/guardar")
-    public String guardarAsignacion(@ModelAttribute Inventario inventario, RedirectAttributes redirectAttributes) {
+    public String guardarAsignacion(
+            @ModelAttribute Inventario inventario,
+            @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile,
+            RedirectAttributes redirectAttributes) {
+        
         try {
             // 1. Establecemos la fecha de asignación actual automáticamente
             inventario.setFechaAsignacion(LocalDateTime.now());
             
-            // 2. CAMBIO DE ESTADO DEL EQUIPO AUTOMÁTICO
+            // 2. Guardar PDF si se subió
+            if (pdfFile != null && !pdfFile.isEmpty()) {
+                String rutaPdf = fileStorageService.guardarPdf(pdfFile);
+                inventario.setRutaPdf(rutaPdf);
+            }
+            
+            // 3. CAMBIO DE ESTADO DEL EQUIPO AUTOMÁTICO
             // Recuperamos el equipo seleccionado
             Equipo equipo = equipoRepository.findById(inventario.getEquipo().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Equipo no encontrado"));
@@ -108,9 +130,11 @@ public class InventarioController {
             equipo.setEstado(estadoAsignado);
             equipoRepository.save(equipo);
 
-            // 3. Guardamos el registro de inventario
+            // 4. Guardamos el registro de inventario
             inventarioRepository.save(inventario);
             redirectAttributes.addFlashAttribute("mensaje", "✅ Equipo asignado correctamente");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", "❌ " + e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "❌ Error al asignar equipo: " + e.getMessage());
         }
@@ -147,5 +171,35 @@ public class InventarioController {
             redirectAttributes.addFlashAttribute("error", "❌ Error al devolver equipo: " + e.getMessage());
         }
         return "redirect:/inventario";
+    }
+
+    // --- 5. DESCARGAR PDF ---
+    @GetMapping("/descargar-pdf/{id}")
+    public ResponseEntity<Resource> descargarPdf(@PathVariable Integer id) {
+        try {
+            Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Asignación no encontrada"));
+            
+            if (inventario.getRutaPdf() == null || inventario.getRutaPdf().isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Path filePath = Paths.get(inventario.getRutaPdf());
+            
+            if (!Files.exists(filePath)) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Resource resource = new UrlResource(filePath.toUri());
+            
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, 
+                        "attachment; filename=\"asignacion_" + inventario.getId() + ".pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+                
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
