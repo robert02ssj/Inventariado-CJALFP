@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="color: #007a33; margin-bottom: 1.5rem;">✅ Equipos Disponibles para Asignar</h2>
+        
+        <!-- Filtro por tipo -->
+        <div class="filter-container">
+            <label class="filter-label">Filtrar por tipo:</label>
+            <form method="get" action="/consultas/equipos-disponibles" style="flex: 1; max-width: 300px;">
+                <select name="tipoId" class="filter-select" onchange="this.form.submit()">
+                    <option value="">▼ Todos los tipos</option>
+                    <option th:each="tipo : ${tipos}" 
+                            th:value="${tipo.id}" 
+                            th:text="${tipo.nombre}"
+                            th:selected="${tipoSeleccionado != null && tipoSeleccionado == tipo.id}">
+                        Tipo
+                    </option>
+                </select>
+            </form>
+        </div>
+        
+        <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0066cc;">
+            <p style="margin: 0; font-size: 1.1rem;">
+                📊 Total equipos disponibles: <strong th:text="${totalDisponibles}">0</strong>
+            </p>
+        </div>
+        
+        <div th:if="${totalDisponibles == 0}" class="alert-consulta alert-warning">
+            <p style="margin: 0;">⚠️ No hay equipos disponibles en este momento.</p>
+        </div>
+        
+        <!-- Equipos agrupados por tipo -->
+        <div th:if="${totalDisponibles > 0}">
+            <div th:each="entry : ${equiposPorTipo}" style="margin-bottom: 30px;">
+                <h3 style="color: #007a33; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #007a33;">
+                    <span th:text="${entry.key}">Tipo</span> 
+                    (<span th:text="${entry.value.size()}">0</span> disponibles)
+                </h3>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Marca</th>
+                                <th>Nº Serie / IMEI</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="equipo : ${entry.value}">
+                                <td th:text="${equipo.modelo.nombre}">Modelo</td>
+                                <td th:text="${equipo.modelo.marca.nombre}">Marca</td>
+                                <td th:text="${equipo.numeroSerie ?: 'N/A'}">Serie</td>
+                                <td>
+                                    <span class="badge badge-success" th:text="${equipo.estado.nombreEstado}">Disponible</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/inventario/asignar(equipoId=${equipo.id})}" 
+                                       class="btn-create" 
+                                       style="padding: 5px 10px; font-size: 0.85rem; text-decoration: none;">
+                                        ➕ Asignar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/consultas" class="btn-secondary" style="padding: 10px 20px; text-decoration: none;">
+                ← Volver a Consultas
+            </a>
+        </div>
+    </section>
+</body>
+</html>

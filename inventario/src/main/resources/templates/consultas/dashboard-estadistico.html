@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::section})}">
+<body>
+    <section>
+        <h2 style="color: #007a33; margin-bottom: 2rem; text-align: center;">📊 Dashboard Estadístico</h2>
+        
+        <div class="stats-grid">
+            <!-- Card 1: Equipos por Tipo -->
+            <div class="stat-card">
+                <h3>📦 EQUIPOS POR TIPO</h3>
+                <div th:each="entry : ${equiposPorTipo}">
+                    <div class="stat-item">
+                        <span th:text="${entry.key}">Tipo</span>
+                        <strong th:text="${entry.value}">0</strong>
+                    </div>
+                </div>
+                <hr style="margin: 15px 0;">
+                <div class="stat-item" style="background-color: #f8f9fa; padding: 10px; border-radius: 4px;">
+                    <span style="font-weight: bold;">📦 TOTAL</span>
+                    <strong style="color: #007a33; font-size: 1.2rem;" th:text="${totalEquipos}">0</strong>
+                </div>
+            </div>
+            
+            <!-- Card 2: Equipos por Estado -->
+            <div class="stat-card">
+                <h3>🏷️ EQUIPOS POR ESTADO</h3>
+                <div th:each="entry : ${equiposPorEstado}">
+                    <div class="stat-item">
+                        <span th:text="${entry.key}">Estado</span>
+                        <span>
+                            <strong th:text="${entry.value}">0</strong>
+                            <span style="color: #666; font-size: 0.9rem;">
+                                (<span th:text="${#numbers.formatDecimal(porcentajesPorEstado[entry.key], 1, 1)}">0.0</span>%)
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3: Usuarios -->
+            <div class="stat-card">
+                <h3>👥 USUARIOS</h3>
+                <div class="stat-item">
+                    <span>Total Usuarios</span>
+                    <strong th:text="${totalUsuarios}">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Con Equipos</span>
+                    <strong style="color: #28a745;" th:text="${usuariosConEquipos}">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Sin Equipos</span>
+                    <strong style="color: #dc3545;" th:text="${usuariosSinEquipos}">0</strong>
+                </div>
+                <hr style="margin: 15px 0;">
+                <div class="stat-item" style="background-color: #f8f9fa; padding: 10px; border-radius: 4px;">
+                    <span style="font-weight: bold;">Cobertura</span>
+                    <strong style="color: #007a33; font-size: 1.2rem;">
+                        <span th:text="${#numbers.formatDecimal(porcentajeUsuariosConEquipos, 1, 1)}">0.0</span>%
+                    </strong>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/consultas" class="btn-secondary" style="padding: 10px 20px; text-decoration: none;">
+                ← Volver a Consultas
+            </a>
+        </div>
+    </section>
+</body>
+</html>
