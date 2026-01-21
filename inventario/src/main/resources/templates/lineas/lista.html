@@ -59,6 +59,45 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- PAGINACIÓN -->
+        <div th:if="${totalPages > 1}" class="pagination-container">
+            <div class="pagination-info">
+                Mostrando 
+                <span th:text="${currentPage * 10 + 1}">1</span> - 
+                <span th:text="${currentPage * 10 + lineas.size()}">10</span> 
+                de <span th:text="${totalItems}">100</span> registros
+            </div>
+            
+            <div class="pagination-controls">
+                <!-- Botón Anterior -->
+                <a th:if="${currentPage > 0}" 
+                   th:href="@{''(page=${currentPage - 1}, busqueda=${busquedaActual})}" 
+                   class="page-btn">
+                    ◀ Anterior
+                </a>
+                <span th:if="${currentPage == 0}" class="page-btn disabled">◀ Anterior</span>
+                
+                <!-- Números de página -->
+                <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a th:if="${i != currentPage}" 
+                       th:href="@{''(page=${i}, busqueda=${busquedaActual})}" 
+                       class="page-number"
+                       th:text="${i + 1}">1</a>
+                    <span th:if="${i == currentPage}" 
+                          class="page-number active"
+                          th:text="${i + 1}">1</span>
+                </span>
+                
+                <!-- Botón Siguiente -->
+                <a th:if="${currentPage < totalPages - 1}" 
+                   th:href="@{''(page=${currentPage + 1}, busqueda=${busquedaActual})}" 
+                   class="page-btn">
+                    Siguiente ▶
+                </a>
+                <span th:if="${currentPage == totalPages - 1}" class="page-btn disabled">Siguiente ▶</span>
+            </div>
+        </div>
     </section>
 
 </body>

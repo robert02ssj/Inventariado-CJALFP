@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,14 @@ public class UsuarioController {
 
     // --- LISTAR (Ya lo tenías) ---
     @GetMapping
-    public String listarUsuarios(@RequestParam(required = false) String busqueda, Model model) {
+    public String listarUsuarios(
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        
+        int pageSize = 10;
         List<Usuario> lista = usuarioRepository.findAll();
+        
         if (busqueda != null && !busqueda.isEmpty()) {
             String term = busqueda.toLowerCase();
             lista = lista.stream()
@@ -29,7 +36,21 @@ public class UsuarioController {
                                  (u.getLdap() != null && u.getLdap().toLowerCase().contains(term)))
                     .collect(Collectors.toList());
         }
-        model.addAttribute("usuarios", lista);
+        
+        // Aplicar paginación manual
+        int totalItems = lista.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        int fromIndex = page * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        
+        List<Usuario> usuariosPaginados = (fromIndex < totalItems) 
+            ? lista.subList(fromIndex, toIndex) 
+            : new ArrayList<>();
+        
+        model.addAttribute("usuarios", usuariosPaginados);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         model.addAttribute("busquedaActual", busqueda);
         return "usuarios/lista";
     }

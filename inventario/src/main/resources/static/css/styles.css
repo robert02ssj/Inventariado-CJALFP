@@ -358,3 +358,54 @@ footer strong {
     border-color: #005f28;
     box-shadow: 0 0 0 3px rgba(0, 122, 51, 0.2);
 }
+/* --- PAGINACIÓN --- */
+.pagination-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.pagination-info {
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.page-btn, .page-number {
+    padding: 8px 12px;
+    background-color: white;
+    color: #007a33;
+    text-decoration: none;
+    border: 1px solid #007a33;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.page-btn:hover, .page-number:hover {
+    background-color: #007a33;
+    color: white;
+}
+
+.page-number.active {
+    background-color: #007a33;
+    color: white;
+    font-weight: bold;
+}
+
+.page-btn.disabled {
+    background-color: #e9ecef;
+    color: #999;
+    border-color: #ddd;
+    cursor: not-allowed;
+}
