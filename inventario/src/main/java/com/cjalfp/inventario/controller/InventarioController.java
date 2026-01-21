@@ -86,46 +86,65 @@ public class InventarioController {
     }
 
     // --- 3. GUARDAR ASIGNACIÓN ---
+    // Estados del sistema:
+    // 1 = Disponible
+    // 2 = Asignado
+    // 3 = Averiado/Retirado
     @PostMapping("/guardar")
     public String guardarAsignacion(@ModelAttribute Inventario inventario, RedirectAttributes redirectAttributes) {
-        // 1. Establecemos la fecha de asignación actual automáticamente
-        inventario.setFechaAsignacion(LocalDateTime.now());
-        
-        // 2. CAMBIO DE ESTADO DEL EQUIPO AUTOMÁTICO
-        // Recuperamos el equipo seleccionado
-        Equipo equipo = equipoRepository.findById(inventario.getEquipo().getId()).orElse(null);
-        if (equipo != null) {
-            // Buscamos el estado "Asignado" (ID 2 según tu script SQL)
-            Estado estadoAsignado = estadoRepository.findById(2).orElse(null);
-            if (estadoAsignado != null) {
-                equipo.setEstado(estadoAsignado);
-                equipoRepository.save(equipo); // Guardamos el equipo actualizado
-            }
-        }
+        try {
+            // 1. Establecemos la fecha de asignación actual automáticamente
+            inventario.setFechaAsignacion(LocalDateTime.now());
+            
+            // 2. CAMBIO DE ESTADO DEL EQUIPO AUTOMÁTICO
+            // Recuperamos el equipo seleccionado
+            Equipo equipo = equipoRepository.findById(inventario.getEquipo().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Equipo no encontrado"));
+            
+            // Cambiar estado a "Asignado" (id=2)
+            Estado estadoAsignado = estadoRepository.findById(2)
+                .orElseThrow(() -> new IllegalStateException("Estado 'Asignado' no configurado en el sistema"));
+            
+            equipo.setEstado(estadoAsignado);
+            equipoRepository.save(equipo);
 
-        // 3. Guardamos el registro de inventario
-        inventarioRepository.save(inventario);
-        redirectAttributes.addFlashAttribute("mensaje", "✅ Equipo asignado correctamente");
+            // 3. Guardamos el registro de inventario
+            inventarioRepository.save(inventario);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Equipo asignado correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al asignar equipo: " + e.getMessage());
+        }
         
         return "redirect:/inventario";
     }
 
-    // --- 4. DEVOLVER EQUIPO (Lo implementaremos después, pero dejo el hueco) ---
+    // --- 4. DEVOLVER EQUIPO ---
     @GetMapping("/devolver/{id}")
     public String devolverEquipo(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        Inventario inv = inventarioRepository.findById(id).orElse(null);
-        if (inv != null && inv.getFechaDevolucion() == null) {
+        try {
+            Inventario inv = inventarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Asignación no encontrada"));
+            
+            if (inv.getFechaDevolucion() != null) {
+                redirectAttributes.addFlashAttribute("error", "❌ Este equipo ya fue devuelto");
+                return "redirect:/inventario";
+            }
+            
             // 1. Poner fecha de devolución
             inv.setFechaDevolucion(LocalDateTime.now());
             inventarioRepository.save(inv);
 
-            // 2. Liberar el equipo (Estado 1 = Disponible)
+            // 2. Liberar el equipo - Cambiar estado a "Disponible" (id=1)
             Equipo equipo = inv.getEquipo();
-            Estado estadoDisponible = estadoRepository.findById(1).orElse(null);
+            Estado estadoDisponible = estadoRepository.findById(1)
+                .orElseThrow(() -> new IllegalStateException("Estado 'Disponible' no configurado en el sistema"));
+            
             equipo.setEstado(estadoDisponible);
             equipoRepository.save(equipo);
             
             redirectAttributes.addFlashAttribute("mensaje", "✅ Equipo devuelto correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al devolver equipo: " + e.getMessage());
         }
         return "redirect:/inventario";
     }
