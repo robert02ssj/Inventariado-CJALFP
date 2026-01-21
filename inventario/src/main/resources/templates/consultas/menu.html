@@ -2,22 +2,16 @@
 <html th:replace="~{layout/base :: layout(~{::section})}">
 <body>
     <section>
-        <h2 style="text-align: center; color: #007a33; margin-bottom: 2rem;">
+        <h2 style="text-align: center; color: #007a33; margin-bottom: 30px;">
             📊 Consultas e Informes
         </h2>
-        
-        <div class="dashboard-grid">
-            <div class="card">
-                <div class="card-header">Consultas de Usuarios</div>
-                <div class="card-body">
-                    <a href="/consultas/equipos-por-usuario" class="menu-btn">📋 Equipos por Usuario</a>
-                    <a href="/consultas/usuarios-sin-equipos" class="menu-btn">⚠️ Usuarios sin Equipos</a>
-                </div>
-            </div>
 
+        <div class="dashboard-grid">
+            
             <div class="card">
                 <div class="card-header">Consultas de Equipos</div>
                 <div class="card-body">
+                    <a href="/consultas/equipos-por-usuario" class="menu-btn">📋 Equipos por Usuario</a>
                     <a href="/consultas/historico-equipo" class="menu-btn">📜 Histórico de Equipo</a>
                     <a href="/consultas/equipos-disponibles" class="menu-btn">✅ Equipos Disponibles</a>
                     <a href="/consultas/asignaciones-antiguas" class="menu-btn">🔴 Asignaciones Antiguas</a>
@@ -25,11 +19,17 @@
             </div>
 
             <div class="card">
-                <div class="card-header">Resumen y Estadísticas</div>
+                <div class="card-header">Estadísticas y Resúmenes</div>
                 <div class="card-body">
                     <a href="/consultas/dashboard" class="menu-btn">📊 Dashboard Estadístico</a>
+                    <a href="/consultas/usuarios-sin-equipos" class="menu-btn">⚠️ Usuarios sin Equipos</a>
                 </div>
             </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/" class="btn-secondary">← Volver al Inicio</a>
         </div>
     </section>
 </body>
