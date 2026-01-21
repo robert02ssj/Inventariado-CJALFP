@@ -75,7 +75,7 @@
                             </span>
                         </div>
                         <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">
-                            ⏱️ <span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(inv.fechaAsignacion, inv.fechaDevolucion != null ? inv.fechaDevolucion : T(java.time.LocalDateTime).now())}">0</span> días
+                            ⏱️ <span th:text="${diasPorAsignacion[inv.id]}">0</span> días
                         </div>
                     </div>
                 </div>

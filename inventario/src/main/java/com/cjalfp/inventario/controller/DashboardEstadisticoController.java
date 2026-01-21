@@ -38,9 +38,8 @@ public class DashboardEstadisticoController {
         long totalEquipos = 0;
         
         for (Tipo tipo : tipos) {
-            long count = equipoRepository.findAll().stream()
-                .filter(e -> e.getTipoObjeto() != null && e.getTipoObjeto().getId().equals(tipo.getId()))
-                .count();
+            // Usar query optimizada en lugar de filtrar en memoria
+            long count = equipoRepository.countByTipoObjetoId(tipo.getId());
             equiposPorTipo.put(tipo.getNombre(), count);
             totalEquipos += count;
         }
