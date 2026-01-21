@@ -17,14 +17,17 @@
             </div>
         </div>
 
-        <div class="tabs-container">
-            <a href="/equipos" class="tab-btn" th:classappend="${tipoActivo == null} ? 'active'">Todos</a>
-            <a href="/equipos?tipo=1" class="tab-btn" th:classappend="${tipoActivo == 1} ? 'active'">Ordenadores</a>
-            <a href="/equipos?tipo=2" class="tab-btn" th:classappend="${tipoActivo == 2} ? 'active'">Teléfonos</a>
-            <a href="/equipos?tipo=6" class="tab-btn" th:classappend="${tipoActivo == 6} ? 'active'">Docking Station</a>
-            <a href="/equipos?tipo=3" class="tab-btn" th:classappend="${tipoActivo == 3} ? 'active'">Pantallas</a>
-            <a href="/equipos?tipo=4" class="tab-btn" th:classappend="${tipoActivo == 4} ? 'active'">Ratones</a>
-            <a href="/equipos?tipo=5" class="tab-btn" th:classappend="${tipoActivo == 5} ? 'active'">Teclados</a>
+        <div class="filter-container">
+            <label for="tipoEquipo" class="filter-label">Tipo de equipo:</label>
+            <select id="tipoEquipo" class="filter-select" onchange="window.location.href = this.value === '' ? '/equipos' : '/equipos?tipo=' + this.value">
+                <option value="" th:selected="${tipoActivo == null}">Todos los equipos</option>
+                <option value="1" th:selected="${tipoActivo == 1}">Ordenadores</option>
+                <option value="2" th:selected="${tipoActivo == 2}">Teléfonos</option>
+                <option value="6" th:selected="${tipoActivo == 6}">Docking Station</option>
+                <option value="3" th:selected="${tipoActivo == 3}">Pantallas</option>
+                <option value="4" th:selected="${tipoActivo == 4}">Ratones</option>
+                <option value="5" th:selected="${tipoActivo == 5}">Teclados</option>
+            </select>
         </div>
 
         <form action="/equipos" method="get" class="search-container">
