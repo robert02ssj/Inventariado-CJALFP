@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,20 +74,20 @@ public class MarcaController {
 
     // --- 4. GUARDAR ---
     @PostMapping("/guardar")
-    public String guardarMarca(@ModelAttribute Marca marca) {
+    public String guardarMarca(@ModelAttribute Marca marca, RedirectAttributes redirectAttributes) {
         marcaRepository.save(marca);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Marca guardada correctamente");
         return "redirect:/marcas";
     }
 
     // --- 5. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarMarca(@PathVariable Integer id) {
-        // Nota: Si intentas borrar una marca que tiene modelos asignados, dará error de BD.
+    public String borrarMarca(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
             marcaRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Marca eliminada correctamente");
         } catch (Exception e) {
-            // Aquí podríamos mandar un mensaje de error, pero por ahora redirigimos.
-            System.err.println("No se puede borrar la marca porque tiene modelos asociados.");
+            redirectAttributes.addFlashAttribute("error", "❌ Error: La marca tiene modelos asociados y no se puede eliminar");
         }
         return "redirect:/marcas";
     }

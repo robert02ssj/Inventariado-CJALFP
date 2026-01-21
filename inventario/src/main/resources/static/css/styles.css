@@ -21,12 +21,20 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 header h1 {
     font-size: 1.5rem;
     font-weight: 600;
+    margin: 0;
 }
 
-/* --- AÑADIR ESTO EN LA SECCIÓN DEL HEADER --- */
 .header-link {
     text-decoration: none;
     color: white;
@@ -34,7 +42,22 @@ header h1 {
 }
 
 .header-link:hover {
-    opacity: 0.9; /* Efecto sutil al pasar el ratón */
+    opacity: 0.9;
+}
+
+.btn-home {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-home:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* --- ACTUALIZAR LA SECCIÓN DE LA TABLA CON ESTO --- */
@@ -408,4 +431,55 @@ footer strong {
     color: #999;
     border-color: #ddd;
     cursor: not-allowed;
+}
+
+/* --- MENSAJES FLASH --- */
+.flash-message {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 15px 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flash-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.flash-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.flash-close:hover {
+    opacity: 1;
 }

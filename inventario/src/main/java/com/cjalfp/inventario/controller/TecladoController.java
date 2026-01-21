@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/teclados")
@@ -38,14 +39,20 @@ public class TecladoController {
     }
 
     @PostMapping("/guardar")
-    public String guardarTeclado(@ModelAttribute Teclado teclado) {
+    public String guardarTeclado(@ModelAttribute Teclado teclado, RedirectAttributes redirectAttributes) {
         tecladoRepository.save(teclado);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Teclado guardado correctamente");
         return "redirect:/equipos?tipo=5";
     }
 
     @GetMapping("/borrar/{id}")
-    public String borrarTeclado(@PathVariable Integer id) {
-        tecladoRepository.deleteById(id);
+    public String borrarTeclado(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            tecladoRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Teclado eliminado correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar el teclado");
+        }
         return "redirect:/equipos?tipo=5";
     }
 }

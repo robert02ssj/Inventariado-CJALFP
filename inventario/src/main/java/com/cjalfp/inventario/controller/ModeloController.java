@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,20 +83,22 @@ public class ModeloController {
 
     // --- 4. GUARDAR ---
     @PostMapping("/guardar")
-    public String guardarModelo(@ModelAttribute Modelo modelo) {
+    public String guardarModelo(@ModelAttribute Modelo modelo, RedirectAttributes redirectAttributes) {
         // Spring es listo: al recibir el ID de la marca del formulario, 
         // busca la entidad Marca automáticamente y la asigna.
         modeloRepository.save(modelo);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Modelo guardado correctamente");
         return "redirect:/modelos";
     }
 
     // --- 5. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarModelo(@PathVariable Integer id) {
+    public String borrarModelo(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
             modeloRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Modelo eliminado correctamente");
         } catch (Exception e) {
-            System.err.println("No se puede borrar el modelo, seguramente hay equipos asignados.");
+            redirectAttributes.addFlashAttribute("error", "❌ Error: El modelo tiene equipos asignados y no se puede eliminar");
         }
         return "redirect:/modelos";
     }
