@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/pantallas")
@@ -39,14 +40,20 @@ public class PantallaController {
     }
 
     @PostMapping("/guardar")
-    public String guardarPantalla(@ModelAttribute Pantalla pantalla) {
+    public String guardarPantalla(@ModelAttribute Pantalla pantalla, RedirectAttributes redirectAttributes) {
         pantallaRepository.save(pantalla);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Pantalla guardada correctamente");
         return "redirect:/equipos?tipo=3";
     }
 
     @GetMapping("/borrar/{id}")
-    public String borrarPantalla(@PathVariable Integer id) {
-        pantallaRepository.deleteById(id);
+    public String borrarPantalla(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            pantallaRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Pantalla eliminada correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar la pantalla");
+        }
         return "redirect:/equipos?tipo=3";
     }
 }

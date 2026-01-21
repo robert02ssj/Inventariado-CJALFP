@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/telefonos")
@@ -55,15 +56,21 @@ public class TelefonoController {
 
     // --- 3. GUARDAR ---
     @PostMapping("/guardar")
-    public String guardarTelefono(@ModelAttribute Telefono telefono) {
+    public String guardarTelefono(@ModelAttribute Telefono telefono, RedirectAttributes redirectAttributes) {
         telefonoRepository.save(telefono);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Teléfono guardado correctamente");
         return "redirect:/equipos?tipo=2"; // Redirige a la pestaña Teléfonos
     }
 
     // --- 4. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarTelefono(@PathVariable Integer id) {
-        telefonoRepository.deleteById(id);
+    public String borrarTelefono(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            telefonoRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Teléfono eliminado correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar el teléfono");
+        }
         return "redirect:/equipos?tipo=2";
     }
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class InventarioController {
 
     // --- 3. GUARDAR ASIGNACIÓN ---
     @PostMapping("/guardar")
-    public String guardarAsignacion(@ModelAttribute Inventario inventario) {
+    public String guardarAsignacion(@ModelAttribute Inventario inventario, RedirectAttributes redirectAttributes) {
         // 1. Establecemos la fecha de asignación actual automáticamente
         inventario.setFechaAsignacion(LocalDateTime.now());
         
@@ -104,13 +105,14 @@ public class InventarioController {
 
         // 3. Guardamos el registro de inventario
         inventarioRepository.save(inventario);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Equipo asignado correctamente");
         
         return "redirect:/inventario";
     }
 
     // --- 4. DEVOLVER EQUIPO (Lo implementaremos después, pero dejo el hueco) ---
     @GetMapping("/devolver/{id}")
-    public String devolverEquipo(@PathVariable Integer id) {
+    public String devolverEquipo(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         Inventario inv = inventarioRepository.findById(id).orElse(null);
         if (inv != null && inv.getFechaDevolucion() == null) {
             // 1. Poner fecha de devolución
@@ -122,6 +124,8 @@ public class InventarioController {
             Estado estadoDisponible = estadoRepository.findById(1).orElse(null);
             equipo.setEstado(estadoDisponible);
             equipoRepository.save(equipo);
+            
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Equipo devuelto correctamente");
         }
         return "redirect:/inventario";
     }

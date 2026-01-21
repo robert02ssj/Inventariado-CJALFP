@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,15 +75,21 @@ public class LineaController {
 
     // --- 4. GUARDAR ---
     @PostMapping("/guardar")
-    public String guardarLinea(@ModelAttribute Linea linea) {
+    public String guardarLinea(@ModelAttribute Linea linea, RedirectAttributes redirectAttributes) {
         lineaRepository.save(linea);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Línea guardada correctamente");
         return "redirect:/lineas";
     }
 
     // --- 5. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarLinea(@PathVariable Integer id) {
-        lineaRepository.deleteById(id);
+    public String borrarLinea(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            lineaRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Línea eliminada correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar la línea");
+        }
         return "redirect:/lineas";
     }
 }

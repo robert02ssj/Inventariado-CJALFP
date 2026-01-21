@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/docking")
@@ -48,15 +49,21 @@ public class DockingStationController {
 
     // --- 3. GUARDAR ---
     @PostMapping("/guardar")
-    public String guardarDocking(@ModelAttribute DockingStation dockingStation) {
+    public String guardarDocking(@ModelAttribute DockingStation dockingStation, RedirectAttributes redirectAttributes) {
         dockingRepository.save(dockingStation);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Docking Station guardada correctamente");
         return "redirect:/equipos?tipo=6"; // Redirige a la pestaña Docking
     }
 
     // --- 4. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarDocking(@PathVariable Integer id) {
-        dockingRepository.deleteById(id);
+    public String borrarDocking(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            dockingRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Docking Station eliminada correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar la Docking Station");
+        }
         return "redirect:/equipos?tipo=6";
     }
 }

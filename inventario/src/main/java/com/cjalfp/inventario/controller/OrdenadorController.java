@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/ordenadores")
@@ -56,16 +57,22 @@ public class OrdenadorController {
 
     // --- 3. GUARDAR ---
     @PostMapping("/guardar")
-    public String guardarOrdenador(@ModelAttribute Ordenador ordenador) {
+    public String guardarOrdenador(@ModelAttribute Ordenador ordenador, RedirectAttributes redirectAttributes) {
         // Al guardar, JPA sabe automáticamente que es un Tipo 1 (Ordenador)
         ordenadorRepository.save(ordenador);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Ordenador guardado correctamente");
         return "redirect:/equipos?tipo=1"; // Redirigimos a la pestaña de Ordenadores
     }
 
     // --- 4. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarOrdenador(@PathVariable Integer id) {
-        ordenadorRepository.deleteById(id);
+    public String borrarOrdenador(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            ordenadorRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Ordenador eliminado correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar el ordenador");
+        }
         return "redirect:/equipos?tipo=1";
     }
 }

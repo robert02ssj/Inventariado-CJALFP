@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,16 +77,21 @@ public class UsuarioController {
 
     // --- 3. GUARDAR (Crear o Actualizar) ---
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario) {
+    public String guardarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
         usuarioRepository.save(usuario);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Usuario guardado correctamente");
         return "redirect:/usuarios"; // Vuelve a la lista
     }
 
     // --- 4. BORRAR ---
     @GetMapping("/borrar/{id}")
-    public String borrarUsuario(@PathVariable Integer id) {
-        // En una app real, aquí comprobaríamos si el usuario tiene equipos asignados antes de borrar
-        usuarioRepository.deleteById(id);
+    public String borrarUsuario(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            usuarioRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Usuario eliminado correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error: El usuario tiene equipos asignados y no se puede eliminar");
+        }
         return "redirect:/usuarios";
     }
 }

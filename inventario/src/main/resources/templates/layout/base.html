@@ -9,10 +9,27 @@
 <body>
 
    <header>
-        <h1>
-            <a href="/" class="header-link">Gestión Inventario TIC</a>
-        </h1>
+        <div class="header-content">
+            <h1>
+                <a href="/" class="header-link">Gestión Inventario TIC</a>
+            </h1>
+            <!-- Botón solo visible si NO estamos en el index -->
+            <a href="/" class="btn-home" th:unless="${#httpServletRequest.requestURI == '/'}">
+                🏠 Inicio
+            </a>
+        </div>
     </header>
+
+    <!-- MENSAJES FLASH -->
+    <div th:if="${mensaje}" class="flash-message flash-success">
+        <span th:text="${mensaje}">Mensaje de éxito</span>
+        <button class="flash-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+
+    <div th:if="${error}" class="flash-message flash-error">
+        <span th:text="${error}">Mensaje de error</span>
+        <button class="flash-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
 
     <main class="container">
         <div th:replace="${content}"></div>
