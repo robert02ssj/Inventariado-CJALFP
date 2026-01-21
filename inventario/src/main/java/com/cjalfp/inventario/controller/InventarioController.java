@@ -184,7 +184,13 @@ public class InventarioController {
                 return ResponseEntity.notFound().build();
             }
             
-            Path filePath = Paths.get(inventario.getRutaPdf());
+            Path filePath = Paths.get(inventario.getRutaPdf()).normalize();
+            
+            // Validar que el archivo esté dentro del directorio permitido (prevenir path traversal)
+            Path uploadDir = Paths.get("uploads/asignaciones/").toAbsolutePath().normalize();
+            if (!filePath.toAbsolutePath().normalize().startsWith(uploadDir)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
             
             if (!Files.exists(filePath)) {
                 return ResponseEntity.notFound().build();
