@@ -3,6 +3,8 @@ package com.cjalfp.inventario.controller;
 import com.cjalfp.inventario.model.Usuario;
 import com.cjalfp.inventario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -98,13 +100,14 @@ public class UsuarioController {
     // --- 5. GUARDAR AJAX ---
     @PostMapping("/guardar-ajax")
     @ResponseBody
-    public Usuario guardarAjax(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> guardarAjax(@RequestBody Usuario usuario) {
         if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre es obligatorio");
+            return ResponseEntity.badRequest().body("El nombre es obligatorio");
         }
         if (usuario.getApellidos() == null || usuario.getApellidos().trim().isEmpty()) {
-            throw new IllegalArgumentException("Los apellidos son obligatorios");
+            return ResponseEntity.badRequest().body("Los apellidos son obligatorios");
         }
-        return usuarioRepository.save(usuario);
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuarioGuardado);
     }
 }

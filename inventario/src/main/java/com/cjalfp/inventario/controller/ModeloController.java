@@ -5,6 +5,8 @@ import com.cjalfp.inventario.model.Modelo;
 import com.cjalfp.inventario.repository.MarcaRepository;
 import com.cjalfp.inventario.repository.ModeloRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -106,13 +108,14 @@ public class ModeloController {
     // --- 6. GUARDAR AJAX ---
     @PostMapping("/guardar-ajax")
     @ResponseBody
-    public Modelo guardarAjax(@RequestBody Modelo modelo) {
+    public ResponseEntity<?> guardarAjax(@RequestBody Modelo modelo) {
         if (modelo.getNombre() == null || modelo.getNombre().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del modelo es obligatorio");
+            return ResponseEntity.badRequest().body("El nombre del modelo es obligatorio");
         }
         if (modelo.getMarca() == null || modelo.getMarca().getId() == null) {
-            throw new IllegalArgumentException("La marca es obligatoria");
+            return ResponseEntity.badRequest().body("La marca es obligatoria");
         }
-        return modeloRepository.save(modelo);
+        Modelo modeloGuardado = modeloRepository.save(modelo);
+        return ResponseEntity.ok(modeloGuardado);
     }
 }

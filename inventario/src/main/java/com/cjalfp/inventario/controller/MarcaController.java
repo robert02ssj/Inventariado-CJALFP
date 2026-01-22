@@ -3,6 +3,8 @@ package com.cjalfp.inventario.controller;
 import com.cjalfp.inventario.model.Marca;
 import com.cjalfp.inventario.repository.MarcaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -95,10 +97,11 @@ public class MarcaController {
     // --- 6. GUARDAR AJAX ---
     @PostMapping("/guardar-ajax")
     @ResponseBody
-    public Marca guardarAjax(@RequestBody Marca marca) {
+    public ResponseEntity<?> guardarAjax(@RequestBody Marca marca) {
         if (marca.getNombreFabricante() == null || marca.getNombreFabricante().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del fabricante es obligatorio");
+            return ResponseEntity.badRequest().body("El nombre del fabricante es obligatorio");
         }
-        return marcaRepository.save(marca);
+        Marca marcaGuardada = marcaRepository.save(marca);
+        return ResponseEntity.ok(marcaGuardada);
     }
 }
