@@ -274,11 +274,8 @@
         
         let asignacionActual = null;
 
-        // Definir funciones en el scope global explícitamente
-        window.abrirModalSubir = function(id, usuario, equipo) {
-            console.log('✅ abrirModalSubir llamado:', id, usuario, equipo);
-            asignacionActual = id;
-            
+        // Helper function para validar elementos del modal
+        function validarElementosModal() {
             const modal = document.getElementById('modalPdf');
             const titulo = document.getElementById('modalTitulo');
             const asignacionIdSpan = document.getElementById('modalAsignacionId');
@@ -290,43 +287,43 @@
             if (!modal || !titulo || !asignacionIdSpan || !usuarioSpan || !equipoSpan || !form || !fileInput) {
                 console.error('❌ Error: No se encontraron elementos del modal');
                 alert('Error: El modal no está disponible. Por favor, recarga la página.');
-                return;
+                return null;
             }
             
-            titulo.textContent = 'SUBIR DOCUMENTO PDF';
-            asignacionIdSpan.textContent = id;
-            usuarioSpan.textContent = usuario;
-            equipoSpan.textContent = equipo;
-            form.action = '/inventario/subir-pdf/' + id;
-            fileInput.value = '';
-            modal.style.display = 'block';
+            return { modal, titulo, asignacionIdSpan, usuarioSpan, equipoSpan, form, fileInput };
+        }
+
+        // Definir funciones en el scope global explícitamente
+        window.abrirModalSubir = function(id, usuario, equipo) {
+            console.log('✅ abrirModalSubir llamado:', id, usuario, equipo);
+            asignacionActual = id;
+            
+            const elementos = validarElementosModal();
+            if (!elementos) return;
+            
+            elementos.titulo.textContent = 'SUBIR DOCUMENTO PDF';
+            elementos.asignacionIdSpan.textContent = id;
+            elementos.usuarioSpan.textContent = usuario;
+            elementos.equipoSpan.textContent = equipo;
+            elementos.form.action = '/inventario/subir-pdf/' + id;
+            elementos.fileInput.value = '';
+            elementos.modal.style.display = 'block';
         };
 
         window.abrirModalCambiar = function(id, usuario, equipo) {
             console.log('✅ abrirModalCambiar llamado:', id, usuario, equipo);
             asignacionActual = id;
             
-            const modal = document.getElementById('modalPdf');
-            const titulo = document.getElementById('modalTitulo');
-            const asignacionIdSpan = document.getElementById('modalAsignacionId');
-            const usuarioSpan = document.getElementById('modalUsuario');
-            const equipoSpan = document.getElementById('modalEquipo');
-            const form = document.getElementById('formSubirPdf');
-            const fileInput = document.getElementById('pdfFileInput');
+            const elementos = validarElementosModal();
+            if (!elementos) return;
             
-            if (!modal || !titulo || !asignacionIdSpan || !usuarioSpan || !equipoSpan || !form || !fileInput) {
-                console.error('❌ Error: No se encontraron elementos del modal');
-                alert('Error: El modal no está disponible. Por favor, recarga la página.');
-                return;
-            }
-            
-            titulo.textContent = 'CAMBIAR DOCUMENTO PDF';
-            asignacionIdSpan.textContent = id;
-            usuarioSpan.textContent = usuario;
-            equipoSpan.textContent = equipo;
-            form.action = '/inventario/cambiar-pdf/' + id;
-            fileInput.value = '';
-            modal.style.display = 'block';
+            elementos.titulo.textContent = 'CAMBIAR DOCUMENTO PDF';
+            elementos.asignacionIdSpan.textContent = id;
+            elementos.usuarioSpan.textContent = usuario;
+            elementos.equipoSpan.textContent = equipo;
+            elementos.form.action = '/inventario/cambiar-pdf/' + id;
+            elementos.fileInput.value = '';
+            elementos.modal.style.display = 'block';
         };
 
         window.cerrarModalPdf = function() {
