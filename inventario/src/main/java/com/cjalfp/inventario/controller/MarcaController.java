@@ -91,4 +91,11 @@ public class MarcaController {
         }
         return "redirect:/marcas";
     }
+
+    // --- 6. GUARDAR AJAX ---
+    @PostMapping("/guardar-ajax")
+    @ResponseBody
+    public Marca guardarAjax(@RequestBody Marca marca) {
+        return marcaRepository.save(marca);
+    }
 }

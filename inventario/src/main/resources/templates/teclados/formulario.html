@@ -15,10 +15,18 @@
 
                 <div class="form-group">
                     <label class="form-label">Modelo:</label>
-                    <select th:field="*{modelo}" class="form-control" required>
-                        <option value="">-- Selecciona Modelo --</option>
-                        <option th:each="m : ${modelos}" th:value="${m.id}" th:text="${m.marca.nombreFabricante + ' - ' + m.nombre}"></option>
-                    </select>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select th:field="*{modelo}" class="form-control" required style="flex: 1;">
+                            <option value="">-- Selecciona Modelo --</option>
+                            <option th:each="m : ${modelos}" th:value="${m.id}" th:text="${m.marca.nombreFabricante + ' - ' + m.nombre}"></option>
+                        </select>
+                        <button type="button" 
+                                onclick="abrirModalModelo()" 
+                                class="btn-create" 
+                                style="white-space: nowrap; padding: 8px 15px;">
+                            + Nuevo Modelo
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -39,6 +47,10 @@
                 </div>
             </form>
         </div>
+
+        <!-- Modales de creación rápida -->
+        <div th:replace="~{marcas/modal-crear :: modal-crear-marca}"></div>
+        <div th:replace="~{modelos/modal-crear :: modal-crear-modelo}"></div>
     </section>
 </body>
 </html>

@@ -94,4 +94,11 @@ public class UsuarioController {
         }
         return "redirect:/usuarios";
     }
+
+    // --- 5. GUARDAR AJAX ---
+    @PostMapping("/guardar-ajax")
+    @ResponseBody
+    public Usuario guardarAjax(@RequestBody Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
 }

@@ -102,4 +102,11 @@ public class ModeloController {
         }
         return "redirect:/modelos";
     }
+
+    // --- 6. GUARDAR AJAX ---
+    @PostMapping("/guardar-ajax")
+    @ResponseBody
+    public Modelo guardarAjax(@RequestBody Modelo modelo) {
+        return modeloRepository.save(modelo);
+    }
 }

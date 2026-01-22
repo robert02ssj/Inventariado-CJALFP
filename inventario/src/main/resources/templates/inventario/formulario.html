@@ -9,13 +9,21 @@
                 
                 <div class="form-group">
                     <label class="form-label">Usuario:</label>
-                    <select th:field="*{usuario}" class="form-control" required>
-                        <option value="">-- Selecciona un compañero --</option>
-                        <option th:each="u : ${usuarios}" 
-                                th:value="${u.id}" 
-                                th:text="${u.nombre + ' ' + (u.apellidos != null ? u.apellidos : '')}">
-                        </option>
-                    </select>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select th:field="*{usuario}" class="form-control" required style="flex: 1;">
+                            <option value="">-- Selecciona un compañero --</option>
+                            <option th:each="u : ${usuarios}" 
+                                    th:value="${u.id}" 
+                                    th:text="${u.nombre + ' ' + (u.apellidos != null ? u.apellidos : '')}">
+                            </option>
+                        </select>
+                        <button type="button" 
+                                onclick="abrirModalUsuario()" 
+                                class="btn-create" 
+                                style="white-space: nowrap; padding: 8px 15px;">
+                            + Nuevo Usuario
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -46,6 +54,9 @@
                 </div>
             </form>
         </div>
+
+        <!-- Modal de nuevo usuario -->
+        <div th:replace="~{usuarios/modal-crear :: modal-crear-usuario}"></div>
     </section>
 </body>
 </html>
