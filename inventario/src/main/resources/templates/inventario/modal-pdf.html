@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Fragment que se incluirá en lista.html -->
+<div th:fragment="modal-pdf">
+    
+    <!-- Modal para SUBIR/CAMBIAR PDF -->
+    <div id="modalPdf" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModalPdf()">&times;</span>
+            
+            <h2 id="modalTitulo">SUBIR DOCUMENTO PDF</h2>
+            
+            <div class="modal-body">
+                <div class="info-asignacion">
+                    <p><strong>Asignación #</strong><span id="modalAsignacionId"></span></p>
+                    <p><strong>Usuario:</strong> <span id="modalUsuario"></span></p>
+                    <p><strong>Equipo:</strong> <span id="modalEquipo"></span></p>
+                </div>
+                
+                <form id="formSubirPdf" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="form-label">📄 Seleccionar archivo PDF:</label>
+                        <input type="file" 
+                               id="pdfFileInput" 
+                               name="pdfFile" 
+                               accept=".pdf" 
+                               class="form-control" 
+                               required>
+                        <small style="color: #666; display: block; margin-top: 5px;">
+                            ⚠️ Solo archivos PDF. Tamaño máximo: 10MB
+                        </small>
+                    </div>
+                    
+                    <div class="form-actions" style="margin-top: 20px; text-align: right;">
+                        <button type="button" onclick="cerrarModalPdf()" class="btn-secondary">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-create">
+                            📤 Subir PDF
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<style>
+/* Estilos del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border: 1px solid #888;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    background-color: #007a33;
+    color: white;
+    margin: 0;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover,
+.close:focus {
+    color: #ddd;
+}
+
+.info-asignacion {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 4px solid #007a33;
+}
+
+.info-asignacion p {
+    margin: 5px 0;
+}
+</style>
+
+<script>
+// Funciones JavaScript para el modal
+let asignacionActual = null;
+
+function abrirModalSubir(id, usuario, equipo) {
+    asignacionActual = id;
+    document.getElementById('modalTitulo').textContent = 'SUBIR DOCUMENTO PDF';
+    document.getElementById('modalAsignacionId').textContent = id;
+    document.getElementById('modalUsuario').textContent = usuario;
+    document.getElementById('modalEquipo').textContent = equipo;
+    document.getElementById('formSubirPdf').action = '/inventario/subir-pdf/' + id;
+    document.getElementById('pdfFileInput').value = '';
+    document.getElementById('modalPdf').style.display = 'block';
+}
+
+function abrirModalCambiar(id, usuario, equipo) {
+    asignacionActual = id;
+    document.getElementById('modalTitulo').textContent = 'CAMBIAR DOCUMENTO PDF';
+    document.getElementById('modalAsignacionId').textContent = id;
+    document.getElementById('modalUsuario').textContent = usuario;
+    document.getElementById('modalEquipo').textContent = equipo;
+    document.getElementById('formSubirPdf').action = '/inventario/cambiar-pdf/' + id;
+    document.getElementById('pdfFileInput').value = '';
+    document.getElementById('modalPdf').style.display = 'block';
+}
+
+function cerrarModalPdf() {
+    document.getElementById('modalPdf').style.display = 'none';
+    asignacionActual = null;
+}
+
+function confirmarEliminar(id, usuario, equipo) {
+    // Escape HTML entities to prevent XSS
+    const escapeHtml = function(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    };
+    
+    if (confirm('¿Estás seguro de eliminar el documento PDF de:\n\n' + 
+                'Usuario: ' + escapeHtml(usuario) + '\n' +
+                'Equipo: ' + escapeHtml(equipo) + '\n\n' +
+                'Esta acción no se puede deshacer.')) {
+        // Create and submit a form for POST request
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/inventario/eliminar-pdf/' + id;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Cerrar modal al hacer click fuera de él
+window.onclick = function(event) {
+    const modal = document.getElementById('modalPdf');
+    if (event.target == modal) {
+        cerrarModalPdf();
+    }
+}
+</script>
+
+</body>
+</html>

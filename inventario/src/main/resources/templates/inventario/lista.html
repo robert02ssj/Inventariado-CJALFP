@@ -3,6 +3,9 @@
 <body>
 
     <section>
+        <!-- Incluir modal de PDF -->
+        <div th:replace="~{inventario/modal-pdf :: modal-pdf}"></div>
+        
         <div class="header-actions">
             <h2 style="color: #333; margin: 0;">Histórico de Asignaciones</h2>
             <a th:href="@{/inventario/asignar}" class="btn-create" style="background-color: #0056b3;">+ Asignar Equipo</a>
@@ -44,16 +47,53 @@
                         </td>
 
                         <td style="text-align: center;">
-                            <a th:if="${inv.rutaPdf != null && inv.rutaPdf != ''}" 
-                               th:href="@{/inventario/descargar-pdf/{id}(id=${inv.id})}"
-                               class="btn-action"
-                               style="display: inline-block; padding: 5px 10px; background: #007a33; color: white; text-decoration: none; border-radius: 4px;">
-                                📥 PDF
-                            </a>
-                            <span th:if="${inv.rutaPdf == null || inv.rutaPdf == ''}" 
-                                  style="color: #999; font-style: italic;">
-                                Sin documento
-                            </span>
+                            <!-- Si TIENE documento -->
+                            <div th:if="${inv.rutaPdf != null && inv.rutaPdf != ''}" 
+                                 style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                                
+                                <a th:href="@{/inventario/descargar-pdf/{id}(id=${inv.id})}"
+                                   class="btn-action"
+                                   style="background: #007a33; padding: 5px 10px; border-radius: 4px; color: white; text-decoration: none;">
+                                    📥 PDF
+                                </a>
+                                
+                                <button type="button"
+                                        th:data-id="${inv.id}"
+                                        th:data-usuario="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}"
+                                        th:data-equipo="${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie}"
+                                        onclick="abrirModalCambiar(this.dataset.id, this.dataset.usuario, this.dataset.equipo)"
+                                        class="btn-action"
+                                        style="background: #ffa500; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;">
+                                    📝 Cambiar
+                                </button>
+                                
+                                <button type="button"
+                                        th:data-id="${inv.id}"
+                                        th:data-usuario="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}"
+                                        th:data-equipo="${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie}"
+                                        onclick="confirmarEliminar(this.dataset.id, this.dataset.usuario, this.dataset.equipo)"
+                                        class="btn-action btn-danger"
+                                        style="background: #dc3545; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;">
+                                    🗑️ Eliminar
+                                </button>
+                            </div>
+                            
+                            <!-- Si NO TIENE documento -->
+                            <div th:if="${inv.rutaPdf == null || inv.rutaPdf == ''}" 
+                                 style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+                                
+                                <span style="color: #999; font-style: italic;">Sin documento</span>
+                                
+                                <button type="button"
+                                        th:data-id="${inv.id}"
+                                        th:data-usuario="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}"
+                                        th:data-equipo="${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie}"
+                                        onclick="abrirModalSubir(this.dataset.id, this.dataset.usuario, this.dataset.equipo)"
+                                        class="btn-create"
+                                        style="padding: 5px 10px; border-radius: 4px; font-size: 0.9rem;">
+                                    📤 Subir PDF
+                                </button>
+                            </div>
                         </td>
 
                         <td>
