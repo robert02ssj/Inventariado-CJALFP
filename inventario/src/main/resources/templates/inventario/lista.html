@@ -58,14 +58,20 @@
                                 </a>
                                 
                                 <button type="button"
-                                        th:onclick="'abrirModalCambiar(' + ${inv.id} + ', \'' + ${inv.usuario.nombre + ' ' + inv.usuario.apellidos} + '\', \'' + ${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie} + '\')'"
+                                        th:data-id="${inv.id}"
+                                        th:data-usuario="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}"
+                                        th:data-equipo="${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie}"
+                                        onclick="abrirModalCambiar(this.dataset.id, this.dataset.usuario, this.dataset.equipo)"
                                         class="btn-action"
                                         style="background: #ffa500; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;">
                                     📝 Cambiar
                                 </button>
                                 
                                 <button type="button"
-                                        th:onclick="'confirmarEliminar(' + ${inv.id} + ', \'' + ${inv.usuario.nombre + ' ' + inv.usuario.apellidos} + '\', \'' + ${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie} + '\')'"
+                                        th:data-id="${inv.id}"
+                                        th:data-usuario="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}"
+                                        th:data-equipo="${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie}"
+                                        onclick="confirmarEliminar(this.dataset.id, this.dataset.usuario, this.dataset.equipo)"
                                         class="btn-action btn-danger"
                                         style="background: #dc3545; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;">
                                     🗑️ Eliminar
@@ -79,7 +85,10 @@
                                 <span style="color: #999; font-style: italic;">Sin documento</span>
                                 
                                 <button type="button"
-                                        th:onclick="'abrirModalSubir(' + ${inv.id} + ', \'' + ${inv.usuario.nombre + ' ' + inv.usuario.apellidos} + '\', \'' + ${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie} + '\')'"
+                                        th:data-id="${inv.id}"
+                                        th:data-usuario="${inv.usuario.nombre + ' ' + inv.usuario.apellidos}"
+                                        th:data-equipo="${inv.equipo.modelo.nombre + ' - ' + inv.equipo.numeroSerie}"
+                                        onclick="abrirModalSubir(this.dataset.id, this.dataset.usuario, this.dataset.equipo)"
                                         class="btn-create"
                                         style="padding: 5px 10px; border-radius: 4px; font-size: 0.9rem;">
                                     📤 Subir PDF

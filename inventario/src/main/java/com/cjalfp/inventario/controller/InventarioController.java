@@ -279,7 +279,7 @@ public class InventarioController {
     }
 
     // --- 8. ELIMINAR PDF ---
-    @GetMapping("/eliminar-pdf/{id}")
+    @PostMapping("/eliminar-pdf/{id}")
     public String eliminarPdf(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         
         try {
