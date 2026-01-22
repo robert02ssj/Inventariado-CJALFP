@@ -300,14 +300,25 @@
     function confirmarEliminar(id, usuario, equipo) {
         console.log('confirmarEliminar llamado:', id, usuario, equipo);
         
+        // Escape HTML entities to prevent XSS
+        const escapeHtml = function(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+        
         const mensaje = '¿Estás seguro de eliminar el documento PDF de:\n\n' + 
-                        'Usuario: ' + usuario + '\n' +
-                        'Equipo: ' + equipo + '\n\n' +
+                        'Usuario: ' + escapeHtml(usuario) + '\n' +
+                        'Equipo: ' + escapeHtml(equipo) + '\n\n' +
                         'Esta acción no se puede deshacer.';
         
         if (confirm(mensaje)) {
-            // Redirigir directamente al endpoint POST
-            window.location.href = '/inventario/eliminar-pdf/' + id;
+            // Create and submit a form for POST request
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/inventario/eliminar-pdf/' + id;
+            document.body.appendChild(form);
+            form.submit();
         }
     }
 
