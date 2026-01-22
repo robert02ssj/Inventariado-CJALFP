@@ -208,4 +208,102 @@ public class InventarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    // --- 6. SUBIR PDF A ASIGNACIÓN EXISTENTE ---
+    @PostMapping("/subir-pdf/{id}")
+    public String subirPdfExistente(
+            @PathVariable Integer id,
+            @RequestParam("pdfFile") MultipartFile pdfFile,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Asignación no encontrada"));
+            
+            if (pdfFile.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "❌ Debe seleccionar un archivo PDF");
+                return "redirect:/inventario";
+            }
+            
+            // Guardar nuevo PDF
+            String rutaPdf = fileStorageService.guardarPdf(pdfFile);
+            inventario.setRutaPdf(rutaPdf);
+            inventarioRepository.save(inventario);
+            
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Documento PDF subido correctamente");
+            
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", "❌ " + e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al subir PDF: " + e.getMessage());
+        }
+        
+        return "redirect:/inventario";
+    }
+
+    // --- 7. CAMBIAR PDF EXISTENTE ---
+    @PostMapping("/cambiar-pdf/{id}")
+    public String cambiarPdf(
+            @PathVariable Integer id,
+            @RequestParam("pdfFile") MultipartFile pdfFile,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Asignación no encontrada"));
+            
+            if (pdfFile.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "❌ Debe seleccionar un archivo PDF");
+                return "redirect:/inventario";
+            }
+            
+            // Eliminar PDF antiguo si existe
+            if (inventario.getRutaPdf() != null && !inventario.getRutaPdf().isEmpty()) {
+                fileStorageService.eliminarPdf(inventario.getRutaPdf());
+            }
+            
+            // Guardar nuevo PDF
+            String rutaPdf = fileStorageService.guardarPdf(pdfFile);
+            inventario.setRutaPdf(rutaPdf);
+            inventarioRepository.save(inventario);
+            
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Documento PDF actualizado correctamente");
+            
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", "❌ " + e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al cambiar PDF: " + e.getMessage());
+        }
+        
+        return "redirect:/inventario";
+    }
+
+    // --- 8. ELIMINAR PDF ---
+    @GetMapping("/eliminar-pdf/{id}")
+    public String eliminarPdf(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        
+        try {
+            Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Asignación no encontrada"));
+            
+            if (inventario.getRutaPdf() == null || inventario.getRutaPdf().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "❌ Esta asignación no tiene documento");
+                return "redirect:/inventario";
+            }
+            
+            // Eliminar archivo del servidor
+            fileStorageService.eliminarPdf(inventario.getRutaPdf());
+            
+            // Limpiar ruta en BD
+            inventario.setRutaPdf(null);
+            inventarioRepository.save(inventario);
+            
+            redirectAttributes.addFlashAttribute("mensaje", "✅ Documento PDF eliminado correctamente");
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Error al eliminar PDF: " + e.getMessage());
+        }
+        
+        return "redirect:/inventario";
+    }
 }
