@@ -55,8 +55,237 @@
             </form>
         </div>
 
-        <!-- Modal de nuevo usuario -->
-        <div th:replace="~{usuarios/modal-crear :: modal-crear-usuario}"></div>
+        <!-- Modal de nuevo usuario inline -->
+        <div id="modalNuevoUsuario" class="modal-quick-create" style="display: none;">
+            <div class="modal-content-quick">
+                <div class="modal-header-quick">
+                    <h3>Nuevo Usuario</h3>
+                    <span class="close-quick" onclick="cerrarModalUsuario()">&times;</span>
+                </div>
+                
+                <div class="modal-body-quick">
+                    <form id="formNuevoUsuario" onsubmit="guardarNuevoUsuario(event)">
+                        <div class="form-group">
+                            <label class="form-label">Nombre: <span style="color: red;">*</span></label>
+                            <input type="text" id="nombreUsuarioNuevo" class="form-control" required autofocus>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Apellidos: <span style="color: red;">*</span></label>
+                            <input type="text" id="apellidosUsuarioNuevo" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Usuario LDAP:</label>
+                            <input type="text" id="ldapUsuarioNuevo" class="form-control" placeholder="Ej: jgarcia">
+                        </div>
+                        
+                        <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                            <button type="button" onclick="cerrarModalUsuario()" class="btn-secondary">Cancelar</button>
+                            <button type="submit" class="btn-create">✅ Guardar Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        .modal-quick-create {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.2s;
+        }
+
+        .modal-content-quick {
+            background-color: #fff;
+            margin: 10% auto;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s;
+        }
+
+        .modal-header-quick {
+            background-color: #ff6b35;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header-quick h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-quick {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close-quick:hover {
+            color: #ddd;
+        }
+
+        .modal-body-quick {
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+        </style>
+
+        <script>
+        function abrirModalUsuario() {
+            console.log('✅ abrirModalUsuario llamado');
+            document.getElementById('modalNuevoUsuario').style.display = 'block';
+            setTimeout(() => document.getElementById('nombreUsuarioNuevo').focus(), 100);
+        }
+
+        function cerrarModalUsuario() {
+            console.log('✅ cerrarModalUsuario llamado');
+            document.getElementById('modalNuevoUsuario').style.display = 'none';
+            document.getElementById('formNuevoUsuario').reset();
+        }
+
+        function guardarNuevoUsuario(event) {
+            event.preventDefault();
+            console.log('✅ guardarNuevoUsuario llamado');
+            
+            const nombre = document.getElementById('nombreUsuarioNuevo').value.trim();
+            const apellidos = document.getElementById('apellidosUsuarioNuevo').value.trim();
+            const ldap = document.getElementById('ldapUsuarioNuevo').value.trim();
+            
+            if (!nombre || !apellidos) {
+                mostrarMensaje('⚠️ Nombre y apellidos son obligatorios', 'error');
+                return;
+            }
+            
+            console.log('📤 Enviando AJAX usuario:', { nombre, apellidos, ldap });
+            
+            fetch('/usuarios/guardar-ajax', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    nombre: nombre,
+                    apellidos: apellidos,
+                    ldap: ldap || null
+                })
+            })
+            .then(response => {
+                console.log('📥 Respuesta recibida:', response.status);
+                if (!response.ok) throw new Error('Error al guardar');
+                return response.json();
+            })
+            .then(usuario => {
+                console.log('✅ Usuario guardado:', usuario);
+                
+                const select = document.querySelector('select[name="usuario"]') || 
+                               document.querySelector('select[name="usuario.id"]');
+                
+                if (select) {
+                    const option = document.createElement('option');
+                    option.value = usuario.id;
+                    option.text = usuario.nombre + ' ' + (usuario.apellidos || '');
+                    option.selected = true;
+                    select.add(option);
+                    console.log('✅ Opción añadida al select');
+                }
+                
+                cerrarModalUsuario();
+                mostrarMensaje('✅ Usuario "' + usuario.nombre + ' ' + usuario.apellidos + '" creado correctamente', 'success');
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                mostrarMensaje('❌ Error al crear el usuario. Inténtalo de nuevo.', 'error');
+            });
+        }
+
+        function mostrarMensaje(texto, tipo) {
+            const mensaje = document.createElement('div');
+            mensaje.textContent = texto;
+            mensaje.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 3000;
+                padding: 15px 25px;
+                background: ${tipo === 'success' ? '#ffe5dc' : '#f8d7da'};
+                color: ${tipo === 'success' ? '#c44221' : '#842029'};
+                border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-weight: 500;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            document.body.appendChild(mensaje);
+            
+            setTimeout(() => {
+                mensaje.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => mensaje.remove(), 300);
+            }, 2500);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('modalNuevoUsuario');
+                if (modal && modal.style.display === 'block') cerrarModalUsuario();
+            }
+        });
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('modalNuevoUsuario');
+            if (event.target === modal) cerrarModalUsuario();
+        });
+
+        console.log('✅ Script de modal de usuario cargado');
+        </script>
     </section>
 </body>
 </html>

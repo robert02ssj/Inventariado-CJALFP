@@ -2,7 +2,7 @@
 <html th:replace="~{layout/base :: layout(~{::section})}">
 <body>
     <section>
-        <h2 style="color: #007a33; margin-bottom: 2rem; text-align: center;">📊 Dashboard Estadístico</h2>
+        <h2 style="color: #ff6b35; margin-bottom: 2rem; text-align: center;">📊 Dashboard Estadístico</h2>
         
         <div class="stats-grid">
             <!-- Card 1: Equipos por Tipo -->
@@ -17,7 +17,7 @@
                 <hr style="margin: 15px 0;">
                 <div class="stat-item" style="background-color: #f8f9fa; padding: 10px; border-radius: 4px;">
                     <span style="font-weight: bold;">📦 TOTAL</span>
-                    <strong style="color: #007a33; font-size: 1.2rem;" th:text="${totalEquipos}">0</strong>
+                    <strong style="color: #ff6b35; font-size: 1.2rem;" th:text="${totalEquipos}">0</strong>
                 </div>
             </div>
             
@@ -55,7 +55,7 @@
                 <hr style="margin: 15px 0;">
                 <div class="stat-item" style="background-color: #f8f9fa; padding: 10px; border-radius: 4px;">
                     <span style="font-weight: bold;">Cobertura</span>
-                    <strong style="color: #007a33; font-size: 1.2rem;">
+                    <strong style="color: #ff6b35; font-size: 1.2rem;">
                         <span th:text="${#numbers.formatDecimal(porcentajeUsuariosConEquipos, 1, 1)}">0.0</span>%
                     </strong>
                 </div>

@@ -40,8 +40,230 @@
             </form>
         </div>
 
-        <!-- Modal de nueva marca -->
-        <div th:replace="~{marcas/modal-crear :: modal-crear-marca}"></div>
+        <!-- ========== MODAL CREAR MARCA ========== -->
+        <div id="modalNuevaMarca" class="modal-quick-create" style="display: none;">
+            <div class="modal-content-quick">
+                <div class="modal-header-quick">
+                    <h3>Nueva Marca</h3>
+                    <span class="close-quick" onclick="cerrarModalMarca()">&times;</span>
+                </div>
+                
+                <div class="modal-body-quick">
+                    <form id="formNuevaMarca" onsubmit="guardarNuevaMarca(event)">
+                        <div class="form-group">
+                            <label class="form-label">Nombre del Fabricante: <span style="color: red;">*</span></label>
+                            <input type="text" 
+                                   id="nombreMarcaNueva" 
+                                   class="form-control" 
+                                   placeholder="Ej: Samsung, HP, Lenovo..." 
+                                   required 
+                                   autofocus>
+                        </div>
+                        
+                        <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                            <button type="button" onclick="cerrarModalMarca()" class="btn-secondary">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn-create">
+                                ✅ Guardar Marca
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        .modal-quick-create {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.2s;
+        }
+
+        .modal-content-quick {
+            background-color: #fff;
+            margin: 10% auto;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s;
+        }
+
+        .modal-header-quick {
+            background-color: #ff6b35;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header-quick h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-quick {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close-quick:hover {
+            color: #ddd;
+        }
+
+        .modal-body-quick {
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+        </style>
+
+        <script>
+        function abrirModalMarca() {
+            console.log('✅ abrirModalMarca llamado');
+            document.getElementById('modalNuevaMarca').style.display = 'block';
+            setTimeout(() => document.getElementById('nombreMarcaNueva').focus(), 100);
+        }
+
+        function cerrarModalMarca() {
+            console.log('✅ cerrarModalMarca llamado');
+            document.getElementById('modalNuevaMarca').style.display = 'none';
+            document.getElementById('formNuevaMarca').reset();
+        }
+
+        function guardarNuevaMarca(event) {
+            event.preventDefault();
+            console.log('✅ guardarNuevaMarca llamado');
+            
+            const nombre = document.getElementById('nombreMarcaNueva').value.trim();
+            
+            if (!nombre) {
+                mostrarMensaje('⚠️ El nombre del fabricante es obligatorio', 'error');
+                return;
+            }
+            
+            console.log('📤 Enviando AJAX:', nombre);
+            
+            fetch('/marcas/guardar-ajax', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombreFabricante: nombre })
+            })
+            .then(response => {
+                console.log('📥 Respuesta recibida:', response.status);
+                if (!response.ok) throw new Error('Error al guardar');
+                return response.json();
+            })
+            .then(marca => {
+                console.log('✅ Marca guardada:', marca);
+                
+                const select = document.querySelector('select[name="marca"]') || 
+                               document.querySelector('select[name="marca.id"]');
+                
+                if (select) {
+                    const option = document.createElement('option');
+                    option.value = marca.id;
+                    option.text = marca.nombreFabricante;
+                    option.selected = true;
+                    select.add(option);
+                    console.log('✅ Opción añadida al select');
+                }
+                
+                cerrarModalMarca();
+                mostrarMensaje('✅ Marca "' + marca.nombreFabricante + '" creada correctamente', 'success');
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                mostrarMensaje('❌ Error al crear la marca. Inténtalo de nuevo.', 'error');
+            });
+        }
+
+        function mostrarMensaje(texto, tipo) {
+            const mensaje = document.createElement('div');
+            mensaje.textContent = texto;
+            mensaje.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 3000;
+                padding: 15px 25px;
+                background: ${tipo === 'success' ? '#ffe5dc' : '#f8d7da'};
+                color: ${tipo === 'success' ? '#c44221' : '#842029'};
+                border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-weight: 500;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            document.body.appendChild(mensaje);
+            
+            setTimeout(() => {
+                mensaje.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => mensaje.remove(), 300);
+            }, 2500);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('modalNuevaMarca');
+                if (modal && modal.style.display === 'block') cerrarModalMarca();
+            }
+        });
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('modalNuevaMarca');
+            if (event.target === modal) cerrarModalMarca();
+        });
+
+        console.log('✅ Script de modal de marca cargado');
+        </script>
     </section>
 </body>
 </html>

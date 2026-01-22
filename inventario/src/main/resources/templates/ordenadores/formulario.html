@@ -8,7 +8,7 @@
             <form th:action="@{/ordenadores/guardar}" th:object="${ordenador}" method="post">
                 <input type="hidden" th:field="*{id}" />
 
-                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Datos Generales</h4>
+                <h4 style="color: #ff6b35; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Datos Generales</h4>
 
                 <div class="form-group">
                     <label class="form-label">Número de Serie:</label>
@@ -44,7 +44,7 @@
                     </select>
                 </div>
 
-                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px;">Detalles PC</h4>
+                <h4 style="color: #ff6b35; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px;">Detalles PC</h4>
 
                 <div class="form-group">
                     <label class="form-label">Código CRIJA:</label>
@@ -80,9 +80,368 @@
             </form>
         </div>
 
-        <!-- Modales de creación rápida -->
-        <div th:replace="~{marcas/modal-crear :: modal-crear-marca}"></div>
-        <div th:replace="~{modelos/modal-crear :: modal-crear-modelo}"></div>
+        <!-- Modales de creación rápida inline --><!-- ========== MODAL CREAR MARCA ========== -->
+<div id="modalNuevaMarca" class="modal-quick-create" style="display: none;">
+    <div class="modal-content-quick">
+        <div class="modal-header-quick">
+            <h3>Nueva Marca</h3>
+            <span class="close-quick" onclick="cerrarModalMarca()">&times;</span>
+        </div>
+        
+        <div class="modal-body-quick">
+            <form id="formNuevaMarca" onsubmit="guardarNuevaMarca(event)">
+                <div class="form-group">
+                    <label class="form-label">Nombre del Fabricante: <span style="color: red;">*</span></label>
+                    <input type="text" 
+                           id="nombreMarcaNueva" 
+                           class="form-control" 
+                           placeholder="Ej: Samsung, HP, Lenovo..." 
+                           required 
+                           autofocus>
+                </div>
+                
+                <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" onclick="cerrarModalMarca()" class="btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-create">
+                        ✅ Guardar Marca
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MODAL CREAR MODELO ========== -->
+<div id="modalNuevoModelo" class="modal-quick-create" style="display: none;">
+    <div class="modal-content-quick">
+        <div class="modal-header-quick">
+            <h3>Nuevo Modelo</h3>
+            <span class="close-quick" onclick="cerrarModalModelo()">&times;</span>
+        </div>
+        
+        <div class="modal-body-quick">
+            <form id="formNuevoModelo" onsubmit="guardarNuevoModelo(event)">
+                <div class="form-group">
+                    <label class="form-label">Marca: <span style="color: red;">*</span></label>
+                    <select id="marcaModeloNuevo" class="form-control" required>
+                        <option value="">-- Selecciona Marca --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre del Modelo: <span style="color: red;">*</span></label>
+                    <input type="text" 
+                           id="nombreModeloNuevo" 
+                           class="form-control" 
+                           placeholder="Ej: Galaxy S23, ThinkPad X1..." 
+                           required>
+                </div>
+                
+                <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" onclick="cerrarModalModelo()" class="btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-create">
+                        ✅ Guardar Modelo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal-quick-create {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.2s;
+}
+
+.modal-content-quick {
+    background-color: #fff;
+    margin: 10% auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s;
+}
+
+.modal-header-quick {
+    background-color: #ff6b35;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header-quick h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.close-quick {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close-quick:hover {
+    color: #ddd;
+}
+
+.modal-body-quick {
+    padding: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+</style>
+
+<script>
+// ========== FUNCIONES MARCA ==========
+function abrirModalMarca() {
+    console.log('✅ abrirModalMarca llamado');
+    document.getElementById('modalNuevaMarca').style.display = 'block';
+    setTimeout(() => document.getElementById('nombreMarcaNueva').focus(), 100);
+}
+
+function cerrarModalMarca() {
+    console.log('✅ cerrarModalMarca llamado');
+    document.getElementById('modalNuevaMarca').style.display = 'none';
+    document.getElementById('formNuevaMarca').reset();
+}
+
+function guardarNuevaMarca(event) {
+    event.preventDefault();
+    console.log('✅ guardarNuevaMarca llamado');
+    
+    const nombre = document.getElementById('nombreMarcaNueva').value.trim();
+    
+    if (!nombre) {
+        mostrarMensaje('⚠️ El nombre del fabricante es obligatorio', 'error');
+        return;
+    }
+    
+    console.log('📤 Enviando AJAX:', nombre);
+    
+    fetch('/marcas/guardar-ajax', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombreFabricante: nombre })
+    })
+    .then(response => {
+        console.log('📥 Respuesta recibida:', response.status);
+        if (!response.ok) throw new Error('Error al guardar');
+        return response.json();
+    })
+    .then(marca => {
+        console.log('✅ Marca guardada:', marca);
+        
+        // Añadir al select de marca en el modal de modelo
+        const selectModalModelo = document.getElementById('marcaModeloNuevo');
+        if (selectModalModelo) {
+            const optionModal = document.createElement('option');
+            optionModal.value = marca.id;
+            optionModal.text = marca.nombreFabricante;
+            optionModal.selected = true;
+            selectModalModelo.add(optionModal);
+        }
+        
+        cerrarModalMarca();
+        mostrarMensaje('✅ Marca "' + marca.nombreFabricante + '" creada correctamente', 'success');
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        mostrarMensaje('❌ Error al crear la marca. Inténtalo de nuevo.', 'error');
+    });
+}
+
+// ========== FUNCIONES MODELO ==========
+function abrirModalModelo() {
+    console.log('✅ abrirModalModelo llamado');
+    cargarMarcasEnModal();
+    document.getElementById('modalNuevoModelo').style.display = 'block';
+    setTimeout(() => document.getElementById('nombreModeloNuevo').focus(), 100);
+}
+
+function cerrarModalModelo() {
+    console.log('✅ cerrarModalModelo llamado');
+    document.getElementById('modalNuevoModelo').style.display = 'none';
+    document.getElementById('formNuevoModelo').reset();
+}
+
+function cargarMarcasEnModal() {
+    fetch('/marcas/guardar-ajax', { method: 'GET' })
+        .catch(() => {
+            // Si falla el GET, intentamos obtener las marcas del select principal
+            const selectPrincipal = document.querySelector('select[name="modelo.marca"]');
+            const selectModal = document.getElementById('marcaModeloNuevo');
+            
+            if (selectPrincipal && selectModal) {
+                selectModal.innerHTML = '<option value="">-- Selecciona Marca --</option>';
+                
+                Array.from(selectPrincipal.options).forEach(option => {
+                    if (option.value) {
+                        const newOption = document.createElement('option');
+                        newOption.value = option.value;
+                        newOption.text = option.text;
+                        selectModal.add(newOption);
+                    }
+                });
+            }
+        });
+}
+
+function guardarNuevoModelo(event) {
+    event.preventDefault();
+    console.log('✅ guardarNuevoModelo llamado');
+    
+    const marcaId = document.getElementById('marcaModeloNuevo').value;
+    const nombre = document.getElementById('nombreModeloNuevo').value.trim();
+    
+    if (!marcaId) {
+        mostrarMensaje('⚠️ Debes seleccionar una marca', 'error');
+        return;
+    }
+    
+    if (!nombre) {
+        mostrarMensaje('⚠️ El nombre del modelo es obligatorio', 'error');
+        return;
+    }
+    
+    console.log('📤 Enviando AJAX modelo:', { marcaId, nombre });
+    
+    fetch('/modelos/guardar-ajax', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            nombre: nombre,
+            marca: { id: parseInt(marcaId) }
+        })
+    })
+    .then(response => {
+        console.log('📥 Respuesta recibida:', response.status);
+        if (!response.ok) throw new Error('Error al guardar');
+        return response.json();
+    })
+    .then(modelo => {
+        console.log('✅ Modelo guardado:', modelo);
+        
+        const select = document.querySelector('select[name="modelo"]') || 
+                       document.querySelector('select[name="modelo.id"]');
+        
+        if (select) {
+            const option = document.createElement('option');
+            option.value = modelo.id;
+            option.text = modelo.marca.nombreFabricante + ' - ' + modelo.nombre;
+            option.selected = true;
+            select.add(option);
+            console.log('✅ Opción añadida al select');
+        }
+        
+        cerrarModalModelo();
+        mostrarMensaje('✅ Modelo "' + modelo.nombre + '" creado correctamente', 'success');
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        mostrarMensaje('❌ Error al crear el modelo. Inténtalo de nuevo.', 'error');
+    });
+}
+
+// ========== MENSAJE FLOTANTE ==========
+function mostrarMensaje(texto, tipo) {
+    const mensaje = document.createElement('div');
+    mensaje.textContent = texto;
+    mensaje.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 3000;
+        padding: 15px 25px;
+        background: ${tipo === 'success' ? '#ffe5dc' : '#f8d7da'};
+        color: ${tipo === 'success' ? '#c44221' : '#842029'};
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-weight: 500;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    document.body.appendChild(mensaje);
+    
+    setTimeout(() => {
+        mensaje.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => mensaje.remove(), 300);
+    }, 2500);
+}
+
+// ========== EVENT LISTENERS ==========
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modalMarca = document.getElementById('modalNuevaMarca');
+        const modalModelo = document.getElementById('modalNuevoModelo');
+        
+        if (modalMarca && modalMarca.style.display === 'block') cerrarModalMarca();
+        if (modalModelo && modalModelo.style.display === 'block') cerrarModalModelo();
+    }
+});
+
+window.addEventListener('click', function(event) {
+    const modalMarca = document.getElementById('modalNuevaMarca');
+    const modalModelo = document.getElementById('modalNuevoModelo');
+    
+    if (event.target === modalMarca) cerrarModalMarca();
+    if (event.target === modalModelo) cerrarModalModelo();
+});
+
+console.log('✅ Script de modales de marca y modelo cargado');
+</script>
     </section>
 </body>
 </html>
