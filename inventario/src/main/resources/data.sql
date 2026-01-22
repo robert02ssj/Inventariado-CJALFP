@@ -43,7 +43,45 @@ INSERT IGNORE INTO Tipo (id_tipo, nombre) VALUES
 
 
 -- Usuarios
-INSERT INTO `Usuario` VALUES (1,'Fernández Díaz','roberto.fernandez','Roberto'),(2,'Mateo García','josel.mateo','Jose Luis'),(3,'Toro Ibañez','josemanuel.toro','Jose Manuel'),(4,'Gomez Gazquez','rebeca.gomez','Rebeca'),(5,'Molina Temino','amaria.molina','Ana Maria'),(6,'Ramos Paris','luzv.ramos','Luz Veronica'),(7,'Fresneda Clement','mariad.fresneda','Maria Dolores'),(8,'Muñoz del Pozo Baños','albertoj.munozpozo','Alberto Jesus'),(9,'Sabio Villegas','patricia.sabio','Patricia'),(10,'Acosta Alcoba','carmenm.acosta','Carmen Maria'),(11,'Martinez Torres','marial.martinez.torres','Maria Luisa'),(12,'Aparicio Navarro','mariam.aparicio','Maria del Mar'),(13,'Garcia Martinez','blancam.garcia','Blanca del Mar'),(14,'Torres Carallor','concepcion.torres','Concepcion'),(15,'Lopez Lopez','cristinam.lopez','Cristina Maria'),(16,'Perez Hernandez','mariaj.perez.hernandez','Maria Jose'),(17,'Ruiz Daimiel','mdolores.ruiz','Maria Dolores'),(18,'Garcia Reina','mariac.garcia.reina','Maria del Carmen'),(19,'Alarcon Gonzalez','mariav.alarcon','Maria Victoria'),(20,'Guzman Martinez','amelia.guzman','Amelia'),(21,'Gerez Garcia','esther.gerez','Ester'),(22,'Suarez Ruano','mariai.suarez','Inmaculada'),(23,'Bautista de los Santos','josei.bautista','Jose Ignacio'),(24,'Sanchez Soriano','juanf.sanchez.soriano','Juan Francisco'),(25,'Garcia Cazorla','mmar.garcia.c','Maria del Mar'),(26,'Carbayo Gorriz','marial.carbayo','Maria Luisa'),(27,'Arnedo Garrigos','mariat.arnedo','Maria Teresa'),(28,'Requena Toribio','carmenm.requena','Carmen Maria'),(29,'Lopez Martinez','javier.lopez','Javier'),(30,'Garcia Segura','manuel.garcia.segura','Manuel'),(31,'Pimentel Asensio','pilar.pimentel','Pilar'),(32,'Ortega Nuñez','irene.ortega.nunez','Irene'),(33,'Bonachera Villegas','josea.bonachera','Jose Antonio'),(34,'Rodriguez Garcia','mariai.rodriguez.garcia','Maria Isabel'),(35,'Sanchez-Sicilia Garcia-Alix','anai.sanchezsicilia','Ana Inmaculada'),(36,'Gonzalez Espinosa','carmen.gonzalez.espinosa','Carmen'),(37,'Gomez de las Heras','rafaelp.gomez','Rafael Pedro'),(38,'Santos Espigares','rafaelj.santos','Rafael');
+INSERT INTO `Usuario` VALUES
+(1,'Roberto','Fernández Díaz','roberto.fernandez'),
+(2,'Jose Luis','Mateo García','josel.mateo'),
+(3,'Jose Manuel','Toro Ibañez','josemanuel.toro'),
+(4,'Rebeca','Gomez Gazquez','rebeca.gomez'),
+(5,'Ana Maria','Molina Temino','amaria.molina'),
+(6,'Luz Veronica','Ramos Paris','luzv.ramos'),
+(7,'Maria Dolores','Fresneda Clement','mariad.fresneda'),
+(8,'Alberto Jesus','Muñoz del Pozo Baños','albertoj.munozpozo'),
+(9,'Patricia','Sabio Villegas','patricia.sabio'),
+(10,'Carmen Maria','Acosta Alcoba','carmenm.acosta'),
+(11,'Maria Luisa','Martinez Torres','marial.martinez.torres'),
+(12,'Maria del Mar','Aparicio Navarro','mariam.aparicio'),
+(13,'Blanca del Mar','Garcia Martinez','blancam.garcia'),
+(14,'Concepcion','Torres Carallor','concepcion.torres'),
+(15,'Cristina Maria','Lopez Lopez','cristinam.lopez'),
+(16,'Maria Jose','Perez Hernandez','mariaj.perez.hernandez'),
+(17,'Maria Dolores','Ruiz Daimiel','mdolores.ruiz'),
+(18,'Maria del Carmen','Garcia Reina','mariac.garcia.reina'),
+(19,'Maria Victoria','Alarcon Gonzalez','mariav.alarcon'),
+(20,'Amelia','Guzman Martinez','amelia.guzman'),
+(21,'Ester','Gerez Garcia','esther.gerez'),
+(22,'Inmaculada','Suarez Ruano','mariai.suarez'),
+(23,'Jose Ignacio','Bautista de los Santos','josei.bautista'),
+(24,'Juan Francisco','Sanchez Soriano','juanf.sanchez.soriano'),
+(25,'Maria del Mar','Garcia Cazorla','mmar.garcia.c'),
+(26,'Maria Luisa','Carbayo Gorriz','marial.carbayo'),
+(27,'Maria Teresa','Arnedo Garrigos','mariat.arnedo'),
+(28,'Carmen Maria','Requena Toribio','carmenm.requena'),
+(29,'Javier','Lopez Martinez','javier.lopez'),
+(30,'Manuel','Garcia Segura','manuel.garcia.segura'),
+(31,'Pilar','Pimentel Asensio','pilar.pimentel'),
+(32,'Irene','Ortega Nuñez','irene.ortega.nunez'),
+(33,'Jose Antonio','Bonachera Villegas','josea.bonachera'),
+(34,'Maria Isabel','Rodriguez Garcia','mariai.rodriguez.garcia'),
+(35,'Ana Inmaculada','Sanchez-Sicilia Garcia-Alix','anai.sanchezsicilia'),
+(36,'Carmen','Gonzalez Espinosa','carmen.gonzalez.espinosa'),
+(37,'Rafael Pedro','Gomez de las Heras','rafaelp.gomez'),
+(38,'Rafael','Santos Espigares','rafaelj.santos');
 
 
 ALTER TABLE Inventario 
