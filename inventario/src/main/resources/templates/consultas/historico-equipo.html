@@ -2,7 +2,7 @@
 <html th:replace="~{layout/base :: layout(~{::section})}">
 <body>
     <section>
-        <h2 style="color: #007a33; margin-bottom: 1.5rem;">📜 Histórico de Equipo</h2>
+        <h2 style="color: #ff6b35; margin-bottom: 1.5rem;">📜 Histórico de Equipo</h2>
         
         <!-- Buscador -->
         <div class="search-container">
@@ -25,8 +25,8 @@
         
         <!-- Resultado -->
         <div th:if="${encontrado != null && encontrado}">
-            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #007a33; margin-bottom: 20px;">
-                <h3 style="color: #007a33; margin-bottom: 15px;">📦 EQUIPO</h3>
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #ff6b35; margin-bottom: 20px;">
+                <h3 style="color: #ff6b35; margin-bottom: 15px;">📦 EQUIPO</h3>
                 <p style="margin: 5px 0;">
                     <strong>Tipo:</strong> <span th:text="${equipo.tipoObjeto != null ? equipo.tipoObjeto.nombre : 'N/A'}">Tipo</span>
                 </p>
@@ -41,7 +41,7 @@
                 </p>
             </div>
             
-            <h3 style="color: #007a33; margin-bottom: 15px;">
+            <h3 style="color: #ff6b35; margin-bottom: 15px;">
                 📅 HISTORIAL (<span th:text="${historial.size()}">0</span> asignaciones)
             </h3>
             

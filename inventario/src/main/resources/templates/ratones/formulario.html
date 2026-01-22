@@ -6,7 +6,7 @@
         <div class="form-container">
             <form th:action="@{/ratones/guardar}" th:object="${raton}" method="post">
                 <input type="hidden" th:field="*{id}" />
-                <h4 style="color: #007a33; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Datos Ratón</h4>
+                <h4 style="color: #ff6b35; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px;">Datos Ratón</h4>
 
                 <div class="form-group">
                     <label class="form-label">Nº Serie (Opcional):</label>
@@ -374,8 +374,8 @@ function mostrarMensaje(texto, tipo) {
         right: 20px;
         z-index: 3000;
         padding: 15px 25px;
-        background: ${tipo === 'success' ? '#d1e7dd' : '#f8d7da'};
-        color: ${tipo === 'success' ? '#0f5132' : '#842029'};
+        background: ${tipo === 'success' ? '#ffe5dc' : '#f8d7da'};
+        color: ${tipo === 'success' ? '#c44221' : '#842029'};
         border-radius: 6px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         font-weight: 500;

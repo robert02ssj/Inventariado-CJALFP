@@ -33,7 +33,7 @@
         <!-- Equipos agrupados por tipo -->
         <div th:if="${totalDisponibles > 0}">
             <div th:each="entry : ${equiposPorTipo}" style="margin-bottom: 30px;">
-                <h3 style="color: #ff6b35; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #007a33;">
+                <h3 style="color: #ff6b35; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #ff6b35;">
                     <span th:text="${entry.key}">Tipo</span> 
                     (<span th:text="${entry.value.size()}">0</span> disponibles)
                 </h3>
