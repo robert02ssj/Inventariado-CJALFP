@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="modal-crear-marca">
+    <div id="modalNuevaMarca" class="modal-quick-create" style="display: none;">
+        <div class="modal-content-quick">
+            <div class="modal-header-quick">
+                <h3>Nueva Marca</h3>
+                <span class="close-quick" onclick="cerrarModalMarca()">&times;</span>
+            </div>
+            
+            <div class="modal-body-quick">
+                <form id="formNuevaMarca" onsubmit="guardarNuevaMarca(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nombre del Fabricante: <span style="color: red;">*</span></label>
+                        <input type="text" 
+                               id="nombreMarcaNueva" 
+                               class="form-control" 
+                               placeholder="Ej: Samsung, HP, Lenovo..." 
+                               required 
+                               autofocus>
+                    </div>
+                    
+                    <div class="form-actions-quick">
+                        <button type="button" onclick="cerrarModalMarca()" class="btn-secondary">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-create">
+                            ✅ Guardar Marca
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal-quick-create {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.2s;
+}
+
+.modal-content-quick {
+    background-color: #fff;
+    margin: 10% auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s;
+}
+
+.modal-header-quick {
+    background-color: #007a33;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header-quick h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.close-quick {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close-quick:hover {
+    color: #ddd;
+}
+
+.modal-body-quick {
+    padding: 20px;
+}
+
+.form-actions-quick {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+</style>
+
+<script>
+function abrirModalMarca() {
+    document.getElementById('modalNuevaMarca').style.display = 'block';
+    document.getElementById('nombreMarcaNueva').focus();
+}
+
+function cerrarModalMarca() {
+    document.getElementById('modalNuevaMarca').style.display = 'none';
+    document.getElementById('formNuevaMarca').reset();
+}
+
+function guardarNuevaMarca(event) {
+    event.preventDefault();
+    
+    const nombre = document.getElementById('nombreMarcaNueva').value.trim();
+    
+    if (!nombre) {
+        alert('⚠️ El nombre del fabricante es obligatorio');
+        return;
+    }
+    
+    // Guardar vía AJAX
+    fetch('/marcas/guardar-ajax', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nombreFabricante: nombre
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al guardar la marca');
+        }
+        return response.json();
+    })
+    .then(marca => {
+        // Añadir al select
+        const select = document.querySelector('select[name="marca"]') || 
+                       document.querySelector('select[name="marca.id"]');
+        
+        if (select) {
+            const option = document.createElement('option');
+            option.value = marca.id;
+            option.text = marca.nombreFabricante;
+            option.selected = true;
+            select.add(option);
+        }
+        
+        cerrarModalMarca();
+        
+        // Mostrar mensaje de éxito
+        const mensaje = document.createElement('div');
+        mensaje.className = 'flash-message flash-success';
+        mensaje.innerHTML = `<span>✅ Marca "${marca.nombreFabricante}" creada correctamente</span>`;
+        mensaje.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 3000; padding: 15px 20px; background: #d1e7dd; color: #0f5132; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);';
+        document.body.appendChild(mensaje);
+        
+        setTimeout(() => mensaje.remove(), 3000);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Error al crear la marca. Por favor, inténtalo de nuevo.');
+    });
+}
+
+// Cerrar modal con ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        cerrarModalMarca();
+    }
+});
+
+// Cerrar modal al hacer click fuera
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('modalNuevaMarca');
+    if (event.target === modal) {
+        cerrarModalMarca();
+    }
+});
+</script>
+
+</body>
+</html>

@@ -3,6 +3,8 @@ package com.cjalfp.inventario.controller;
 import com.cjalfp.inventario.model.Usuario;
 import com.cjalfp.inventario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -93,5 +95,19 @@ public class UsuarioController {
             redirectAttributes.addFlashAttribute("error", "❌ Error: El usuario tiene equipos asignados y no se puede eliminar");
         }
         return "redirect:/usuarios";
+    }
+
+    // --- 5. GUARDAR AJAX ---
+    @PostMapping("/guardar-ajax")
+    @ResponseBody
+    public ResponseEntity<?> guardarAjax(@RequestBody Usuario usuario) {
+        if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El nombre es obligatorio");
+        }
+        if (usuario.getApellidos() == null || usuario.getApellidos().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Los apellidos son obligatorios");
+        }
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuarioGuardado);
     }
 }

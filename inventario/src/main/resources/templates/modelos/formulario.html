@@ -16,13 +16,21 @@
 
                 <div class="form-group">
                     <label class="form-label">Fabricante (Marca):</label>
-                    <select th:field="*{marca}" class="form-control" required>
-                        <option value="">-- Selecciona un fabricante --</option>
-                        <option th:each="m : ${marcas}" 
-                                th:value="${m.id}" 
-                                th:text="${m.nombreFabricante}">
-                        </option>
-                    </select>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select th:field="*{marca}" class="form-control" required style="flex: 1;">
+                            <option value="">-- Selecciona un fabricante --</option>
+                            <option th:each="m : ${marcas}" 
+                                    th:value="${m.id}" 
+                                    th:text="${m.nombreFabricante}">
+                            </option>
+                        </select>
+                        <button type="button" 
+                                onclick="abrirModalMarca()" 
+                                class="btn-create" 
+                                style="white-space: nowrap; padding: 8px 15px;">
+                            + Nueva Marca
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-actions">
@@ -31,6 +39,9 @@
                 </div>
             </form>
         </div>
+
+        <!-- Modal de nueva marca -->
+        <div th:replace="~{marcas/modal-crear :: modal-crear-marca}"></div>
     </section>
 </body>
 </html>

@@ -3,6 +3,8 @@ package com.cjalfp.inventario.controller;
 import com.cjalfp.inventario.model.Marca;
 import com.cjalfp.inventario.repository.MarcaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -90,5 +92,16 @@ public class MarcaController {
             redirectAttributes.addFlashAttribute("error", "❌ Error: La marca tiene modelos asociados y no se puede eliminar");
         }
         return "redirect:/marcas";
+    }
+
+    // --- 6. GUARDAR AJAX ---
+    @PostMapping("/guardar-ajax")
+    @ResponseBody
+    public ResponseEntity<?> guardarAjax(@RequestBody Marca marca) {
+        if (marca.getNombreFabricante() == null || marca.getNombreFabricante().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El nombre del fabricante es obligatorio");
+        }
+        Marca marcaGuardada = marcaRepository.save(marca);
+        return ResponseEntity.ok(marcaGuardada);
     }
 }
