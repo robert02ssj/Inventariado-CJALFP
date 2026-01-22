@@ -70,7 +70,7 @@
                             <span th:if="${equipo.linea == null}">-</span>
                         </td>
                         <td th:if="${tipoActivo == 1 or tipoActivo == 2}">
-                             <span th:if="${equipo.movilidad == true}" style="color: #007a33; font-weight: bold;">Sí</span>
+                             <span th:if="${equipo.movilidad == true}" style="color: #ff6b35; font-weight: bold;">Sí</span>
                              <span th:if="${equipo.movilidad == false or equipo.movilidad == null}" style="color: #666;">No</span>
                         </td>
                         <td th:if="${tipoActivo == 6}" th:text="${equipo.macAddress}"></td>

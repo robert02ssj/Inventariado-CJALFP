@@ -40,7 +40,7 @@
                         <td>
                             <span th:if="${inv.fechaDevolucion != null}" 
                                   th:text="${#temporals.format(inv.fechaDevolucion, 'dd/MM/yyyy HH:mm')}"></span>
-                            <span th:if="${inv.fechaDevolucion == null}" style="color: #007a33; font-weight: bold;">-</span>
+                            <span th:if="${inv.fechaDevolucion == null}" style="color: #ff6b35; font-weight: bold;">-</span>
                         </td>
 
                         <td style="text-align: center;">
@@ -58,7 +58,7 @@
 
                         <td>
                             <span th:if="${inv.fechaDevolucion == null}" 
-                                  style="padding: 4px 8px; background-color: #d1e7dd; color: #0f5132; border-radius: 4px; font-size: 0.8rem;">
+                                  style="padding: 4px 8px; background-color: #ffe5dc; color: #0f5132; border-radius: 4px; font-size: 0.8rem;">
                                 ACTIVO
                             </span>
                             <span th:if="${inv.fechaDevolucion != null}" 

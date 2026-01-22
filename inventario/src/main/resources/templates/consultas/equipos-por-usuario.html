@@ -2,7 +2,7 @@
 <html th:replace="~{layout/base :: layout(~{::section})}">
 <body>
     <section>
-        <h2 style="color: #007a33; margin-bottom: 1.5rem;">📋 Equipos por Usuario</h2>
+        <h2 style="color: #ff6b35; margin-bottom: 1.5rem;">📋 Equipos por Usuario</h2>
         
         <!-- Buscador -->
         <div class="search-container">
@@ -28,7 +28,7 @@
         <!-- Lista de usuarios con sus equipos -->
         <div th:if="${totalItems > 0}">
             <div th:each="entry : ${equiposPorUsuario}" class="usuario-section">
-                <h3 style="color: #007a33; margin-bottom: 10px;">
+                <h3 style="color: #ff6b35; margin-bottom: 10px;">
                     👤 <span th:text="${entry.key.nombre + ' ' + entry.key.apellidos}">Usuario</span>
                     <span th:if="${entry.key.ldap != null}" 
                           style="color: #666; font-size: 0.9rem; font-weight: normal;">
