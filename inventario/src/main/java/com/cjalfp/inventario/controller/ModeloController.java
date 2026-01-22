@@ -107,6 +107,12 @@ public class ModeloController {
     @PostMapping("/guardar-ajax")
     @ResponseBody
     public Modelo guardarAjax(@RequestBody Modelo modelo) {
+        if (modelo.getNombre() == null || modelo.getNombre().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del modelo es obligatorio");
+        }
+        if (modelo.getMarca() == null || modelo.getMarca().getId() == null) {
+            throw new IllegalArgumentException("La marca es obligatoria");
+        }
         return modeloRepository.save(modelo);
     }
 }

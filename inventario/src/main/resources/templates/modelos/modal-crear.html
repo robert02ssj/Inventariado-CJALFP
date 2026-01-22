@@ -87,7 +87,8 @@ function guardarNuevoModelo(event) {
         if (select) {
             const option = document.createElement('option');
             option.value = modelo.id;
-            option.text = modelo.nombre;
+            // Include brand name for consistency with existing format
+            option.text = modelo.marca.nombreFabricante + ' - ' + modelo.nombre;
             option.selected = true;
             select.add(option);
         }

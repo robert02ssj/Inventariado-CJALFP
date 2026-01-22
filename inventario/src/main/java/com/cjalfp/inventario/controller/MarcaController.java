@@ -96,6 +96,9 @@ public class MarcaController {
     @PostMapping("/guardar-ajax")
     @ResponseBody
     public Marca guardarAjax(@RequestBody Marca marca) {
+        if (marca.getNombreFabricante() == null || marca.getNombreFabricante().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del fabricante es obligatorio");
+        }
         return marcaRepository.save(marca);
     }
 }

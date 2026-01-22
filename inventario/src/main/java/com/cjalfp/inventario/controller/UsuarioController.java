@@ -99,6 +99,12 @@ public class UsuarioController {
     @PostMapping("/guardar-ajax")
     @ResponseBody
     public Usuario guardarAjax(@RequestBody Usuario usuario) {
+        if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (usuario.getApellidos() == null || usuario.getApellidos().trim().isEmpty()) {
+            throw new IllegalArgumentException("Los apellidos son obligatorios");
+        }
         return usuarioRepository.save(usuario);
     }
 }
